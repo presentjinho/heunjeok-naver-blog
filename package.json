@@ -1,0 +1,13 @@
+{
+  "name": "heunjeok-naver-blog",
+  "version": "0.1.0",
+  "private": true,
+  "description": "네이버 블로그용 주제·말투·경험·발행 준비 웹앱",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/core.test.js tests/app-contract.test.js tests/server.test.js tests/ai.test.js tests/naver-data.test.js tests/history.test.js tests/photo-vault.test.js",
+    "check": "node --check core.js && node --check history.js && node --check photo-vault.js && node --check ai.js && node --check naver-data.js && node --check server.js && node --check app.js",
+    "security:scan": "node scripts/security-scan.js",
+    "ci": "npm run check && npm test && npm run security:scan"
+  }
+}

@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f5132">
+  <meta name="description" content="네이버 블로그용 주제 선택, 말투 반영, 경험 보강, 발행 준비를 돕는 글쓰기 작업실">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests">
+  <title>흔적 — 네이버 블로그 글쓰기 작업실</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./comments.css">
+  <link rel="stylesheet" href="./a11y.css">
+  <link rel="stylesheet" href="./connection.css">
+  <script src="./core.js" defer></script>
+  <script src="./history.js" defer></script>
+  <script src="./photo-vault.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#topicSection">주요 내용으로 바로가기</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="흔적 처음으로">흔<span>적</span></a>
+    <p class="product-name">네이버 블로그 발행 준비 도우미</p>
+    <span class="local-badge">네이버 공식 서비스가 아니에요</span>
+  </header>
+
+  <main id="top" class="page-shell">
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="kicker">내가 겪은 일은 그대로, 자동으로 덧붙인 사실은 없이</p>
+      <h1 id="hero-title">오늘 쓸 주제부터<br>네이버에 옮길 글까지.</h1>
+      <p class="hero-copy">짧은 경험 질문에 답하면 내 문장을 중심으로 초안을 엮고, 틀에 박힌 표현과 빠진 확인 항목을 따로 보여줍니다.</p>
+    </section>
+
+    <section class="connection-card" aria-labelledby="connection-title">
+      <div>
+        <p class="section-number">내 블로그</p>
+        <h2 id="connection-title">네이버 블로그 주소 연결</h2>
+        <p>주소만 이 브라우저에 저장합니다. 네이버 비밀번호·로그인 쿠키는 받지 않으며 자동 발행 권한도 요청하지 않습니다.</p>
+      </div>
+      <div class="connection-form">
+        <div class="naver-auth-row">
+          <div><strong id="naverLoginStatus" role="status">네이버 로그인 확인 중</strong><p>로그인은 회원 확인용이며 블로그 소유권이나 자동 발행 권한을 뜻하지 않습니다.</p></div>
+          <button id="naverLogin" class="secondary" type="button">네이버로 로그인</button>
+          <button id="naverLogout" class="text-button" type="button" hidden>로그아웃</button>
+        </div>
+        <label for="blogUrl">내 블로그 주소</label>
+        <div class="connection-input-row"><input id="blogUrl" type="url" inputmode="url" autocomplete="url" maxlength="300" placeholder="https://blog.naver.com/myid" aria-describedby="blogUrlHelp blogConnectionStatus"><button id="connectBlog" class="secondary" type="button">주소 연결</button></div>
+        <p id="blogUrlHelp">공식 네이버 블로그 주소만 허용하며 주소에 포함된 블로그 ID만 저장합니다.</p>
+        <div class="connection-state"><strong id="blogConnectionStatus" role="status">연결된 블로그 없음</strong><div><a id="openConnectedBlog" class="text-link" target="_blank" rel="noopener noreferrer" hidden>내 블로그 열기</a><button id="disconnectBlog" class="text-button" type="button" hidden>연결 해제</button></div></div>
+      </div>
+    </section>
+
+    <ol class="steps" aria-label="글 준비 단계">
+      <li class="is-current" aria-current="step"><span>1</span> 주제 고르기</li>
+      <li><span>2</span> 말투 <small>선택</small></li>
+      <li><span>3</span> 경험 답하기</li>
+      <li><span>4</span> 검수·복사</li>
+    </ol>
+
+    <section id="topicSection" class="topic-section" aria-labelledby="topic-title" tabindex="-1">
+      <div class="section-heading">
+        <div>
+          <p class="section-number">01</p>
+          <h2 id="topic-title">분야별 글감 템플릿</h2>
+          <p>반복해서 활용할 수 있는 경험형 글감입니다. 실시간 인기 주제나 검색량을 뜻하지 않습니다.</p>
+        </div>
+        <label class="compact-field" for="category">블로그 분야
+          <select id="category">
+            <option value="local">맛집·지역</option>
+            <option value="travel">여행</option>
+            <option value="beauty">뷰티</option>
+            <option value="parenting">육아</option>
+            <option value="tech">IT·제품 리뷰</option>
+            <option value="life">생활·취미</option>
+          </select>
+        </label>
+      </div>
+      <div id="topicList" class="topic-grid"></div>
+      <div class="custom-topic"><label for="customTopic">직접 정한 주제가 있나요?</label><div><input id="customTopic" placeholder="예: 성수동 노트북 작업 카페 방문 기록"><button id="useCustomTopic" class="secondary" type="button">이 주제 사용</button></div></div>
+      <p id="selectedTopicStatus" class="selected-status" role="status">주제를 하나 골라주세요.</p>
+      <div class="trend-panel" aria-labelledby="trend-title">
+        <div><strong id="trend-title">네이버 검색 관심도</strong><p>실제 검색 횟수가 아니라 최근 12주 중 최고점을 100으로 둔 상대값입니다.</p></div>
+        <button id="loadTrend" class="secondary" type="button">상대 추세 확인</button>
+        <div id="trendResult" class="trend-result" aria-live="polite" hidden><p id="trendMeta"></p><ol id="trendPoints"></ol></div>
+      </div>
+    </section>
+
+    <section id="workspace" class="workspace" aria-label="네이버 블로그 글 준비 작업실">
+      <div class="input-column">
+        <section class="work-card" aria-labelledby="tone-title">
+          <div class="card-heading"><span>02</span><div><h2 id="tone-title">내 문장 습관 <small>선택</small></h2><p>문단 호흡·연결어는 구성에 참고하고 말끝 차이는 결과에서 알려드려요. 기존 글 원문은 저장하지 않습니다.</p></div></div>
+          <label for="toneSamples">내가 쓴 기존 글 <small>최소 30자</small></label>
+          <textarea id="toneSamples" rows="6" placeholder="기존 네이버 블로그 글을 30자 이상 붙여넣어 주세요." aria-describedby="toneHelp toneError"></textarea>
+          <div class="field-meta"><span id="toneHelp">글이 길수록 말끝과 문장 길이를 더 안정적으로 파악할 수 있어요.</span><strong id="toneCount">0자</strong></div>
+          <p id="toneError" class="field-error" hidden></p>
+          <label for="toneSourceUrl">이 글의 네이버 주소 <small>선택</small></label>
+          <input id="toneSourceUrl" type="url" inputmode="url" maxlength="500" placeholder="https://blog.naver.com/내아이디/게시글번호">
+          <label class="consent-check"><input id="approveToneSource" type="checkbox"> 이 글을 말투 분석에 사용하는 데 동의합니다. 원문은 저장하지 않습니다.</label>
+          <label for="avoidPhrases">내가 쓰지 않는 표현 <small>선택</small></label>
+          <input id="avoidPhrases" placeholder="쉼표로 구분: 오늘은 알아보겠습니다, 강력 추천, 총정리">
+          <div class="action-row">
+            <button id="saveTone" class="primary" type="button" disabled>말투 카드 만들기</button>
+            <button id="deleteTone" class="text-button" type="button">저장된 카드 삭제</button>
+          </div>
+          <div id="toneProfile" class="tone-profile" aria-live="polite"><p>아직 등록된 말투가 없습니다. 기본 말투로도 글을 만들 수 있어요.</p></div>
+        </section>
+
+        <section class="work-card" aria-labelledby="memo-title">
+          <div class="card-heading"><span>03</span><div><h2 id="memo-title">빠른 경험 취재함</h2><p>몇 가지 질문에 답하면 확인한 사실만으로 네이버 초안을 구성합니다.</p></div></div>
+
+          <label for="postType">어떤 글인가요?</label>
+          <select id="postType">
+            <option value="visit">방문 후기</option>
+            <option value="product">제품 사용기</option>
+            <option value="howto">방법·정보</option>
+            <option value="compare">비교·선택기</option>
+            <option value="daily">일상 기록</option>
+          </select>
+
+          <div class="interview-heading">
+            <div><h3 id="interviewTitle">경험 질문</h3><p id="interviewHelp">먼저 핵심 세 칸을 답하면 보완용 뼈대를 만들 수 있어요.</p></div>
+            <strong id="interviewProgress" role="status">핵심 0/3 · 선택 0/3</strong>
+          </div>
+          <p id="workspaceHelp" class="interview-save-note">답변과 추가 메모는 입력을 멈춘 뒤 이 브라우저에 자동 저장됩니다.</p>
+          <div id="experienceFields" class="experience-fields" role="group" aria-labelledby="interviewTitle" aria-describedby="interviewHelp workspaceHelp"></div>
+
+          <details id="moreExperience" class="more-experience">
+            <summary>더 구체적으로 쓰기 <span>선택 질문 3개 · 메모 · 사진</span></summary>
+            <div id="moreExperienceFields" class="experience-fields optional-fields" role="group" aria-label="선택 경험 질문" aria-describedby="workspaceHelp"></div>
+
+            <label for="memo">추가 메모 <small>선택</small></label>
+            <textarea id="memo" rows="5" placeholder="질문에 담지 못한 장면이나 꼭 남기고 싶은 표현을 자유롭게 적어주세요."></textarea>
+            <div class="field-meta"><span>입력하지 않은 가격·효과·경험은 만들어내지 않습니다.</span><strong id="memoCount">0자</strong></div>
+
+            <label for="photoNotes">가지고 있는 사진 설명 <small>선택</small></label>
+            <textarea id="photoNotes" rows="4" placeholder="한 줄에 하나씩: 입구 사진, 메뉴판, 실제 사용 장면, 결과 사진"></textarea>
+            <div class="photo-vault"><label class="secondary photo-picker" for="photoFiles">사진 취재함에 추가</label><button id="clearPhotos" class="text-button" type="button">사진 모두 삭제</button><input id="photoFiles" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" multiple><p id="photoVaultStatus" role="status">사진은 이 기기에만 저장되며 서버로 보내지지 않습니다.</p><ul id="photoVaultList"></ul></div>
+          </details>
+
+          <label for="relationship">광고·협찬 관계</label>
+          <select id="relationship">
+            <option value="none">해당 없음</option>
+            <option value="selfpaid">직접 구매(내돈내산)</option>
+            <option value="provided">제품·서비스 제공받음</option>
+            <option value="paid">원고료 제공받음</option>
+            <option value="affiliate">제휴 링크 포함</option>
+          </select>
+          <div class="workspace-save-row">
+            <span id="workspaceSaveState" role="status">입력하면 이 브라우저에 자동 저장돼요.</span>
+            <button id="clearWorkspace" class="text-button" type="button">입력만 비우기</button>
+          </div>
+          <p class="privacy-note">경험 답변·추가 메모·사진 설명과 편집 초안은 이 브라우저에 자동 저장됩니다. 외부 서버로 보내지 않으며 언제든 아래에서 모두 삭제할 수 있어요.</p>
+          <div class="action-row stack-mobile">
+            <button id="generate" class="primary large" type="button">내 경험으로 초안 만들기</button>
+            <button id="clearLocalData" class="text-button" type="button">내 브라우저 데이터 삭제</button>
+          </div>
+        </section>
+      </div>
+
+      <section id="resultPanel" class="result-panel" aria-labelledby="result-title" tabindex="-1">
+        <div class="result-heading">
+          <div><p class="section-number">04</p><h2 id="result-title">발행 준비 결과</h2></div>
+          <span id="resultState" class="result-state">경험을 기다리는 중</span>
+        </div>
+        <p id="liveStatus" class="sr-only" aria-live="polite"></p>
+        <div id="emptyResult" class="empty-result"><span aria-hidden="true">✎</span><p>주제를 고르고 경험을 적으면<br>네이버용 글이 여기에 준비됩니다.</p></div>
+        <div id="resultContent" hidden>
+          <div id="staleNotice" class="stale-notice" hidden>경험 내용이 바뀌었어요. 다시 만들기 전에는 이전 결과를 복사할 수 없습니다.</div>
+
+          <section class="result-section" aria-labelledby="titles-heading">
+            <h3 id="titles-heading">제목 후보</h3>
+            <ol id="titleCandidates" class="title-list"></ol>
+          </section>
+
+          <section class="result-section" aria-labelledby="draft-heading">
+            <div class="result-section-heading"><h3 id="draft-heading">편집 가능한 본문</h3><span id="draftSaveState">자동 저장됨</span></div>
+            <textarea id="draft" class="draft-editor" rows="18" aria-label="편집 가능한 네이버 블로그 본문"></textarea>
+            <div class="version-controls"><label for="draftVersion">최근 본문 버전</label><select id="draftVersion" aria-describedby="versionHelp"><option value="">복구할 버전 선택</option></select><button id="restoreVersion" class="secondary" type="button" disabled>이 버전 복구</button></div>
+            <p id="versionHelp" class="help">서로 다른 본문을 최대 10개까지 이 브라우저에만 보관합니다.</p>
+          </section>
+
+          <section class="result-section provenance" aria-labelledby="provenance-heading">
+            <h3 id="provenance-heading">이 초안은 어디서 왔나요?</h3>
+            <p id="provenanceSummary" class="provenance-summary"></p>
+            <ul id="provenanceList" class="provenance-list"></ul>
+          </section>
+
+          <section class="result-section human-check" aria-labelledby="human-check-heading">
+            <div class="result-section-heading"><h3 id="human-check-heading">흔한 자동 문구 점검</h3><span id="humanCheckState"></span></div>
+            <p class="audit-scope">정해진 문장 패턴만 확인하며, AI 작성 여부나 글의 진위를 판정하지 않습니다.</p>
+            <ul id="humanCheckList" class="human-check-list"></ul>
+            <p id="humanGoodSignals" class="human-good-signals"></p>
+          </section>
+
+          <section class="result-section two-up" aria-label="사진 순서와 해시태그">
+            <div><h3>사진 순서 제안</h3><ol id="photoPlan" class="plain-list"></ol></div>
+            <div><h3>해시태그</h3><p id="hashtags" class="hashtags"></p><button id="copyTags" class="secondary copy-control" type="button" aria-describedby="copyLockReason">해시태그 복사</button></div>
+          </section>
+
+          <section class="result-section specificity" aria-labelledby="specificity-heading">
+            <h3 id="specificity-heading">입력 현황</h3>
+            <p id="specificityLevel" class="specificity-level"></p>
+            <p class="specificity-note">답변이 얼마나 채워졌는지만 봅니다. 사실 여부나 최신 정보는 자동으로 확인하지 않습니다.</p>
+            <ul id="specificitySignals" class="signal-list"></ul>
+            <label for="experienceBoost">더 넣을 내 경험 한 줄 <small>선택</small></label>
+            <div class="inline-action"><input id="experienceBoost" placeholder="예: 20분 머물러 보니 콘센트가 있는 안쪽 자리가 더 편했어요."><button id="applyExperience" class="secondary" type="button">반영하기</button></div>
+          </section>
+
+          <fieldset class="result-section checklist">
+            <legend>발행 전 확인</legend>
+            <label><input type="checkbox" name="publishCheck"> 제목과 본문이 같은 내용을 말해요</label>
+            <label><input type="checkbox" name="publishCheck"> 가격·시간·주소·수치를 다시 확인했어요</label>
+            <label><input type="checkbox" name="publishCheck"> 사진 사용 권리와 개인정보를 확인했어요</label>
+            <label><input type="checkbox" name="publishCheck"> 광고·협찬 관계를 눈에 띄게 표시했어요</label>
+            <label><input type="checkbox" name="publishCheck"> 네이버 카테고리와 주제를 골랐어요</label>
+            <label><input type="checkbox" name="publishCheck"> 공개 범위와 검색 허용을 확인했어요</label>
+            <label><input type="checkbox" name="publishCheck"> 댓글·공감·공유 설정을 확인했어요</label>
+            <label><input type="checkbox" name="publishCheck"> 필요한 장소·링크를 네이버에서 넣었어요</label>
+            <label><input type="checkbox" name="publishCheck"> 지금 발행할지 예약할지 확인했어요</label>
+            <p id="checkProgress">0/9 확인</p>
+          </fieldset>
+
+          <div class="publish-actions">
+            <button id="copyTitle" class="secondary copy-control" type="button" aria-describedby="copyLockReason">첫 제목 복사</button>
+            <button id="copyBody" class="secondary copy-control" type="button" aria-describedby="copyLockReason">본문 복사</button>
+            <button id="copyAll" class="primary copy-control" type="button" aria-describedby="copyLockReason">제목·본문·태그 모두 복사</button>
+            <a class="naver-link" href="https://blog.naver.com/" target="_blank" rel="noopener noreferrer">네이버 블로그 열기 <span aria-hidden="true">↗</span></a>
+          </div>
+          <p id="copyLockReason" class="copy-lock-reason" role="status"></p>
+          <p class="final-note">완성 전에 숫자·가격·경험 내용만 한 번 확인해 주세요. 네이버 검색 노출이나 순위를 보장하지 않습니다.</p>
+        </div>
+      </section>
+    </section>
+
+    <section class="comment-helper" aria-labelledby="comment-title">
+      <div class="comment-intro"><p class="section-number">댓글 답변 틀</p><h2 id="comment-title">댓글을 붙여넣으면 고쳐 쓸 답변 틀을 준비해요.</h2><p>사실 답변은 대신 만들지 않습니다. 빈칸이 남았거나 원 댓글이 바뀌면 다시 확인하기 전까지 복사할 수 없어요.</p></div>
+      <div class="comment-workspace"><div><label for="commentInput">받은 댓글</label><textarea id="commentInput" rows="4" placeholder="답변할 댓글을 붙여넣어 주세요."></textarea><button id="makeReplies" class="primary" type="button">답변 후보 만들기</button></div><div id="replyArea" hidden><h3>답변 후보</h3><ul id="replyList" class="reply-list"></ul></div></div>
+    </section>
+
+    <section class="comment-helper" aria-labelledby="data-title">
+      <div class="comment-intro"><p class="section-number">고객 데이터</p><h2 id="data-title">이 브라우저에 저장된 내용을 직접 관리해요.</h2><p>외부 서버 전송은 없으며, 항목별 확인·삭제와 백업 파일 저장을 사용자가 직접 실행합니다.</p></div>
+      <ul id="dataInventory" class="data-inventory" aria-live="polite"></ul>
+      <div class="action-row stack-mobile"><button id="refreshDataInventory" class="secondary" type="button">저장 내용 새로고침</button><button id="exportLocalData" class="secondary" type="button">내 데이터 백업</button><button id="deleteAllLocalData" class="text-button danger-button" type="button">모두 삭제</button></div>
+      <p class="privacy-note">백업 파일에는 현재 브라우저에 저장된 블로그 주소·경험 답변·말투 카드·초안이 포함될 수 있습니다. 개인 기기에만 보관해 주세요.</p>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+</body>
+</html>

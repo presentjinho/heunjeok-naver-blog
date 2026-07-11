@@ -1,0 +1,4 @@
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.HeunjeokHistory=api})(typeof globalThis!=='undefined'?globalThis:this,function(){'use strict';
+function normalizeVersions(value){if(!Array.isArray(value))return[];return value.filter(item=>item&&typeof item.draft==='string'&&typeof item.savedAt==='string').slice(-10)}
+function addVersion(versions,snapshot){const list=normalizeVersions(versions);if(!snapshot||typeof snapshot.draft!=='string')return list;const last=list[list.length-1];if(last&&last.draft===snapshot.draft)return list;return[...list,{draft:snapshot.draft,topic:String(snapshot.topic||''),savedAt:snapshot.savedAt||new Date().toISOString(),reason:String(snapshot.reason||'편집')}].slice(-10)}
+return{normalizeVersions,addVersion}});

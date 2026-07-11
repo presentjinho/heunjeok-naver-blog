@@ -1,0 +1,3 @@
+const test=require('node:test');const assert=require('node:assert/strict');const {normalizeVersions,addVersion}=require('../history');
+test('초안 버전은 서로 다른 본문만 최근 10개 유지한다',()=>{let versions=[];for(let i=0;i<12;i++)versions=addVersion(versions,{draft:`본문 ${i}`,topic:'주제',savedAt:`2026-01-${String(i+1).padStart(2,'0')}`});assert.equal(versions.length,10);assert.equal(versions[0].draft,'본문 2');assert.equal(addVersion(versions,{draft:'본문 11'}).length,10)});
+test('손상된 버전 데이터는 복구 목록에서 제외한다',()=>{assert.deepEqual(normalizeVersions([null,{draft:1},{draft:'정상',savedAt:'now'}]),[{draft:'정상',savedAt:'now'}])});
