@@ -31,5 +31,23 @@
     if(!result.ok){setStatus(result.error==='reference_too_short'?'기준 글이 너무 짧아요.':'비교할 내 본문이 너무 짧아요.');return}
     last=result;setStatus('기준 글 원문은 저장하지 않았어요. 구조 지표만 대조했습니다.');render(result);
   }
+  async function pasteFromClipboard(){
+    try{
+      if(!navigator.clipboard||!navigator.clipboard.readText){setStatus('이 브라우저에서는 클립보드 읽기를 지원하지 않아요. 칸을 길게 눌러 붙여넣기 해 주세요.');els.reference.focus({preventScroll:true});return}
+      const text=(await navigator.clipboard.readText()).trim();
+      if(!text){setStatus('클립보드가 비어 있어요. 네이버 글 본문을 먼저 복사해 주세요.');return}
+      if(/^https?:\/\//i.test(text)&&text.length<120&&!/\s/.test(text)){setStatus('링크만으로는 불러올 수 없어요. 네이버에서 본문 전체를 복사해 붙여넣어 주세요.');return}
+      els.reference.value=text;els.reference.dispatchEvent(new Event('input',{bubbles:true}));
+      setStatus('클립보드 내용을 붙여넣었어요. 초안이 있으면 구조 비교를 눌러 주세요. (원문 저장 안 함)');
+    }catch{setStatus('클립보드 권한이 막혔어요. 칸을 길게 눌러 직접 붙여넣기 해 주세요.');els.reference.focus({preventScroll:true})}
+  }
+  function openSearch(){
+    const topic=currentTopic()||'블로그 후기';
+    const url='https://search.naver.com/search.naver?where=blog&query='+encodeURIComponent(topic)+'&sort=date';
+    window.open(url,'_blank','noopener,noreferrer');
+    setStatus('네이버 검색을 열었어요. 본문을 복사한 뒤 돌아와 붙여넣기 하세요. URL만 넣으면 동작하지 않아요.');
+  }
+  const pasteBtn=$('benchmarkPaste');if(pasteBtn)pasteBtn.addEventListener('click',pasteFromClipboard);
+  const openBtn=$('benchmarkOpenSearch');if(openBtn)openBtn.addEventListener('click',openSearch);
   els.run.addEventListener('click',run);
 })();
