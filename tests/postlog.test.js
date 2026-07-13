@@ -64,3 +64,5 @@ test('toNonNegativeInt는 콤마·공백을 처리하고 빈값은 null',()=>{
   assert.equal(toNonNegativeInt(''),null);
   assert.equal(toNonNegativeInt('-1'),null);
 });
+
+test('X 발행 기록은 플랫폼과 노출·좋아요·북마크 수동 성과를 보존한다',()=>{const created=createEntry({topic:'X 스레드',platform:'x'});assert.equal(created.value.platform,'x');const updated=updateMetrics([created.value],created.value.id,{impressions:'1,200',likes:'30',bookmarks:'8'});assert.equal(updated[0].metrics.impressions,1200);assert.equal(updated[0].metrics.likes,30);assert.equal(updated[0].metrics.bookmarks,8)});

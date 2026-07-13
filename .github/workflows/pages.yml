@@ -15,7 +15,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run ci
   deploy:
+    needs: verify
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -28,7 +40,7 @@ jobs:
         shell: bash
         run: |
           mkdir _site
-          cp index.html *.css app.js core.js history.js photo-vault.js benchmark.js quality.js assemble.js improve-ui.js postlog.js postlog-ui.js benchmark-ui.js daily.js daily-ui.js _site/
+          cp index.html privacy.html security.html *.css app.js core.js history.js photo-vault.js benchmark.js quality.js assemble.js improve-ui.js postlog.js postlog-ui.js benchmark-ui.js daily.js daily-ui.js platform.js backup.js product-v2.js _site/
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v4
         with:

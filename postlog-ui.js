@@ -4,7 +4,7 @@
   if(!Log)return;
   const KEY='heunjeok-postlog';
   const $=id=>document.getElementById(id);
-  const els={topic:$('logTopic'),role:$('logRole'),keywords:$('logKeywords'),url:$('logUrl'),note:$('logNote'),add:$('logAdd'),status:$('logStatus'),summary:$('logSummary'),followup:$('logFollowup'),list:$('logList')};
+  const els={topic:$('logTopic'),platform:$('logPlatform'),role:$('logRole'),keywords:$('logKeywords'),url:$('logUrl'),note:$('logNote'),add:$('logAdd'),status:$('logStatus'),summary:$('logSummary'),followup:$('logFollowup'),list:$('logList')};
   if(!els.add||!els.list)return;
   function read(){try{return Log.normalizeLog(localStorage.getItem(KEY))}catch{return[]}}
   function write(list){try{localStorage.setItem(KEY,JSON.stringify(list));return true}catch{return false}}
@@ -33,7 +33,7 @@
       const due=!entry.metrics&&(now-entry.publishedAt)>=Log.FOLLOWUP_DAYS*86400000;if(due)item.classList.add('is-due');
       const head=document.createElement('div');head.className='postlog-item-head';
       const title=document.createElement('strong');title.textContent=entry.topic;
-      const role=document.createElement('span');role.className='postlog-role';role.textContent=entry.role;
+      const role=document.createElement('span');role.className='postlog-role';role.textContent=`${entry.platform==='x'?'X':entry.platform==='both'?'네이버+X':'네이버'} · ${entry.role}`;
       head.append(title,role);item.append(head);
       const meta=document.createElement('p');meta.className='postlog-meta';meta.textContent=fmtDate(entry.publishedAt)+(entry.postType?' · '+entry.postType:'');item.append(meta);
       if(entry.keywords.length){const kw=document.createElement('div');kw.className='postlog-keywords';entry.keywords.forEach(k=>{const s=document.createElement('span');s.textContent='#'+k;kw.append(s)});item.append(kw)}
@@ -41,8 +41,11 @@
       const viewsInput=document.createElement('input');viewsInput.type='text';viewsInput.inputMode='numeric';viewsInput.placeholder='조회수';viewsInput.setAttribute('aria-label',entry.topic+' 조회수');viewsInput.value=entry.metrics&&entry.metrics.views!==null?String(entry.metrics.views):'';
       const inflowInput=document.createElement('input');inflowInput.type='text';inflowInput.inputMode='numeric';inflowInput.placeholder='유입수';inflowInput.setAttribute('aria-label',entry.topic+' 유입수');inflowInput.value=entry.metrics&&entry.metrics.inflow!==null?String(entry.metrics.inflow):'';
       const save=document.createElement('button');save.type='button';save.className='secondary';save.textContent='성과 저장';
-      save.addEventListener('click',()=>{const updated=Log.updateMetrics(read(),entry.id,{views:viewsInput.value,inflow:inflowInput.value});if(!write(updated)){setStatus('브라우저 저장이 차단돼 성과를 저장하지 못했어요.');return}render();setStatus('직접 입력한 성과를 저장했어요. 조회수는 대신 조회하지 않습니다.')});
-      metrics.append(viewsInput,inflowInput,save);
+      const impressions=document.createElement('input');impressions.type='text';impressions.inputMode='numeric';impressions.placeholder='노출수(X)';impressions.value=entry.metrics&&entry.metrics.impressions!==null?String(entry.metrics.impressions):'';
+      const likes=document.createElement('input');likes.type='text';likes.inputMode='numeric';likes.placeholder='좋아요(X)';likes.value=entry.metrics&&entry.metrics.likes!==null?String(entry.metrics.likes):'';
+      const bookmarks=document.createElement('input');bookmarks.type='text';bookmarks.inputMode='numeric';bookmarks.placeholder='북마크(X)';bookmarks.value=entry.metrics&&entry.metrics.bookmarks!==null?String(entry.metrics.bookmarks):'';
+      save.addEventListener('click',()=>{const updated=Log.updateMetrics(read(),entry.id,{views:viewsInput.value,inflow:inflowInput.value,impressions:impressions.value,likes:likes.value,bookmarks:bookmarks.value});if(!write(updated)){setStatus('브라우저 저장이 차단돼 성과를 저장하지 못했어요.');return}render();setStatus('직접 입력한 성과를 저장했어요. 조회수는 대신 조회하지 않습니다.')});
+      metrics.append(viewsInput,inflowInput);if(entry.platform!=='naver')metrics.append(impressions,likes,bookmarks);metrics.append(save);
       if(entry.metrics&&entry.metrics.recordedAt){const rec=document.createElement('span');rec.className='postlog-recorded';rec.textContent='입력됨';metrics.append(rec)}
       const remove=document.createElement('button');remove.type='button';remove.className='text-button postlog-remove';remove.textContent='삭제';
       remove.addEventListener('click',()=>{if(!confirm('이 발행 기록을 삭제할까요?'))return;if(!write(Log.removeEntry(read(),entry.id))){setStatus('브라우저 저장이 차단돼 기록을 삭제하지 못했어요.');return}render();setStatus('발행 기록을 삭제했어요.')});
@@ -52,7 +55,7 @@
   }
   function add(){
     const topic=(els.topic&&els.topic.value.trim())||currentTopic();
-    const created=Log.createEntry({topic,role:els.role?els.role.value:'기타',keywords:els.keywords?els.keywords.value:'',url:els.url?els.url.value:'',note:els.note?els.note.value:'',postType:($('postType')&&$('postType').value)||''});
+    const created=Log.createEntry({topic,platform:els.platform?els.platform.value:'naver',role:els.role?els.role.value:'기타',keywords:els.keywords?els.keywords.value:'',url:els.url?els.url.value:'',note:els.note?els.note.value:'',postType:($('postType')&&$('postType').value)||''});
     if(!created.ok){setStatus('발행한 글의 주제를 2자 이상 적어주세요.');if(els.topic)els.topic.focus({preventScroll:true});return}
     if(!write(Log.addEntry(read(),created.value))){setStatus('브라우저 저장이 차단돼 기록하지 못했어요.');return}
     if(els.topic)els.topic.value='';if(els.keywords)els.keywords.value='';if(els.url)els.url.value='';if(els.note)els.note.value='';

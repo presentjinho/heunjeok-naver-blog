@@ -53,7 +53,7 @@
   function renderQuality(result){
     const host=$('qualityList');if(!host)return;host.innerHTML='';
     if(!result.issues.length){const li=document.createElement('li');li.className='is-clear';li.innerHTML='<strong>정해진 패턴에서 경고 없음</strong>정한 저품질·AI티 패턴에서는 걸리는 게 없어요. 내용의 진솔함이 관건입니다.';host.append(li)}
-    else result.issues.forEach(issue=>{const li=document.createElement('li');li.className='sev-'+issue.severity;const t=document.createElement('strong');t.textContent=issue.title;const d=document.createElement('span');d.textContent=issue.detail;li.append(t,d);if(issue.snippet){const c=document.createElement('code');c.textContent=issue.snippet;li.append(c)}const guide=correctionGuide[issue.code];if(guide){const action=document.createElement('em');action.className='correction-action';action.textContent='고치는 법 · '+guide;li.append(action)}host.append(li)});
+    else result.issues.forEach(issue=>{const li=document.createElement('li');li.className='sev-'+issue.severity;li.dataset.severity=issue.severity;li.tabIndex=0;const t=document.createElement('strong');t.textContent=issue.title;const d=document.createElement('span');d.textContent=issue.detail;li.append(t,d);if(issue.snippet){const c=document.createElement('code');c.textContent=issue.snippet;li.append(c)}const guide=correctionGuide[issue.code];if(guide){const action=document.createElement('em');action.className='correction-action';action.textContent='고치는 법 · '+guide;li.append(action)}host.append(li)});
     const good=$('qualityGood');if(good)good.textContent=result.goodSignals.length?'잘된 점: '+result.goodSignals.join(' · '):'';
     const stats=$('qualityStats');if(stats)stats.textContent='독자 피로 '+result.stats.readerFatigue+' · 구체 정보 '+result.stats.concreteFacts+'곳 · 경험문장 '+result.stats.experientialSentences+'/'+result.stats.totalSentences+' · 글자벽 '+result.stats.longWalls+' · 반복 '+(result.stats.duplicates||0);
     const advice=$('correctionAdvice');const count=$('correctionCount');if(advice){advice.innerHTML='';(result.sentenceAdvice||[]).forEach(item=>{const li=document.createElement('li');const before=document.createElement('q');before.textContent=item.text;const tip=document.createElement('span');tip.textContent=item.advice;li.append(before,tip);advice.append(li)});if(!(result.sentenceAdvice||[]).length){const li=document.createElement('li');li.textContent='문장별 경고가 없습니다. 사실·가격·최신 정보는 직접 확인해 주세요.';advice.append(li)}}if(count)count.textContent=(result.sentenceAdvice||[]).length+'개';const preview=$('correctionPreview');if(preview)preview.value=result.correction&&result.correction.text||'';
@@ -75,7 +75,7 @@
 
   // ── 분량 미터 (2000·3000자 긴 글 지원) ──
   const LENGTH_KEY='heunjeok-length-target';
-  function lengthTarget(){const v=parseInt(localStorage.getItem(LENGTH_KEY),10);return [1500,2000,3000].includes(v)?v:2000}
+  function lengthTarget(){const v=parseInt(localStorage.getItem(LENGTH_KEY),10);return [1500,2000,3000].includes(v)?v:1500}
   function setupLengthMeter(){
     const draft=$('draft');if(!draft||$('lengthMeter'))return;
     const wrap=document.createElement('div');wrap.id='lengthMeter';wrap.className='length-meter';
