@@ -28,7 +28,7 @@ jobs:
         shell: bash
         run: |
           mkdir _site
-          cp index.html *.css app.js core.js history.js photo-vault.js benchmark.js quality.js assemble.js improve-ui.js postlog.js postlog-ui.js benchmark-ui.js _site/
+          cp index.html *.css app.js core.js history.js photo-vault.js benchmark.js quality.js assemble.js improve-ui.js postlog.js postlog-ui.js benchmark-ui.js daily.js daily-ui.js _site/
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v4
         with:

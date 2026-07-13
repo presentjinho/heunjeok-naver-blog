@@ -7,7 +7,7 @@ const crypto=require('node:crypto');
 const {validateDraftInput,createOpenAIClient,createAuxOpenAIClient}=require('./ai');
 const {validateTrendRequest,createDataLabClient,createSearchAdsClient}=require('./naver-data');
 
-const PUBLIC_FILES=new Set(['/index.html','/styles.css','/comments.css','/a11y.css','/connection.css','/benchmark.css','/improve.css','/postlog.css','/core.js','/history.js','/photo-vault.js','/benchmark.js','/benchmark-ui.js','/quality.js','/assemble.js','/improve-ui.js','/postlog.js','/postlog-ui.js','/app.js']);
+const PUBLIC_FILES=new Set(['/index.html','/styles.css','/comments.css','/a11y.css','/connection.css','/benchmark.css','/improve.css','/postlog.css','/daily.css','/core.js','/history.js','/photo-vault.js','/benchmark.js','/benchmark-ui.js','/quality.js','/assemble.js','/improve-ui.js','/postlog.js','/postlog-ui.js','/daily.js','/daily-ui.js','/app.js']);
 const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8'};
 const SECRET_NAMES=['OPENAI_API_KEY','NAVER_CLIENT_SECRET','NAVER_DATALAB_CLIENT_SECRET','SEARCHAD_SECRET_KEY','SESSION_SECRET'];
 function configuredOrigins(env=process.env){if(env.APP_ORIGIN)return String(env.APP_ORIGIN).split(',').map(value=>value.trim()).filter(Boolean);const host=String(env.RENDER_EXTERNAL_HOSTNAME||'').trim();if(/^[a-z0-9.-]+$/i.test(host)&&!host.startsWith('.')&&!host.endsWith('.'))return[`https://${host}`];return['http://localhost:3000','http://127.0.0.1:3000']}
