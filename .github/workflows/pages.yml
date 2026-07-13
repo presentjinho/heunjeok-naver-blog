@@ -42,4 +42,11 @@ jobs:
           mkdir _site
           cp index.html guide.html privacy.html security.html favicon.svg favicon.ico apple-touch-icon.png og.png og-card.svg manifest.webmanifest *.css app.js core.js history.js photo-vault.js benchmark.js quality.js assemble.js improve-ui.js postlog.js postlog-ui.js benchmark-ui.js daily.js daily-ui.js backup.js product-v2.js fold-ui.js _site/
           BUILD_SHA="${GITHUB_SHA::7}"
-          sed -E -i "s/\?v=[A-Za-z0-9._-]+/?v=${BUILD_SHA}/g; s/(name=\"heunjeok-build\" content=\")[^\"]+/\1${BUILD_SHA}/"
+          sed -E -i "s/\?v=[A-Za-z0-9._-]+/?v=${BUILD_SHA}/g; s/(name=\"heunjeok-build\" content=\")[^\"]+/\1${BUILD_SHA}/" _site/index.html
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
