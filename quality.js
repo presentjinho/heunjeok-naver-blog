@@ -2,7 +2,7 @@
   // 점수 대신 체크리스트. 노출·순위 보장 문구는 절대 만들지 않는다.
   const EXAGGERATION=['강력 추천','강력추천','강추','무조건','반드시','절대','최고','최고의','인생','인생템','대박','완벽','완벽한','후회 없','후회없','국룰','필수템','안 사면 손해','안사면 손해','미쳤','역대급','끝판왕','갓성비','초대박'];
   const GUARANTEE=['보장','확실히','100%','무조건 됩니다','효과 보장','상위 노출','상위노출','무조건 효과'];
-  const TEMPLATE=['알아보겠습니다','소개해 드리겠습니다','소개해드리겠습니다','소개해드릴게요','지금부터','함께 알아봐요','총정리','정리해봤어요','정리해 봤어요','도움이 되셨길','도움이 되셨다면','뒤로가기 전에','본격적으로','서론이 길었','오늘은 ','포스팅을 시작','자 그럼','그럼 시작'];
+  const TEMPLATE=['알아보겠습니다','소개해 드리겠습니다','소개해드리겠습니다','소개해드릴게요','지금부터','함께 알아봐요','총정리','정리해봤어요','정리해 봤어요','도움이 되셨길','도움이 되셨다면','뒤로가기 전에','본격적으로','서론이 길었','오늘은 ','포스팅을 시작','자 그럼','그럼 시작','결국','꼭 확인하세요','한눈에','핵심만','완벽 가이드'];
   const CLICKBAIT=['충격','헉','이것만은','반드시 알아야','알고 보니','알고보니','결국','미쳤다','대박','TOP','top ','베스트','절대 하지 마','절대하지마','하는 이유','하는 법','하지 않으면','이유 3가지','가지 이유','실화'];
   const AD_PUSH=['문의 주세요','문의주세요','디엠','dm 주세요','디엠 주세요','구매 링크','구매링크','아래 링크','링크 클릭','구입 문의','상담 문의','예약 문의','카톡 주세요','전화 주세요'];
   const EXPERIENCE_MARK=/(저는|제가|직접|가 봤|가봤|가서|써 봤|써봤|먹어 봤|먹어봤|사용해|방문|다녀왔|다녀온|느꼈|느낀|보였|들렸|주문했|시켰|해 봤|해봤|겪었|경험)/;
@@ -34,6 +34,7 @@
     const repeatedStarters=Object.keys(starters).filter(key=>starters[key]>=3);
     return{duplicates:duplicates.slice(0,5),repeatedStarters};
   }
+  function informationSignals(text){const value=normalize(text);const concrete=(value.match(/(?:\d[\d,.]*\s*(?:원|분|시간|개|장|명|일|주|개월|km|m|%))|(?:오전|오후|평일|주말)|(?:에서|에는|까지|부터)/g)||[]).length;const vague=(value.match(/좋았|괜찮았|만족|추천|유용|편리/g)||[]).length;const emoji=(value.match(/[\u{1F300}-\u{1FAFF}]|[★☆♥♡✓✔→▶◆■]/gu)||[]).length;const sentences=splitSentences(value).length;const density=sentences?concrete/sentences:0;const fatigue=density>=.35&&vague<=Math.max(2,concrete)?'낮음':density>=.15?'보통':'높음';return{concrete,vague,emoji,density:Math.round(density*100)/100,fatigue}}
   function audit(draft,options={}){
     const text=normalize(draft);const issues=[];const good=[];
     const paragraphs=splitParagraphs(text);
@@ -55,10 +56,12 @@
     const clickbait=titles.filter(title=>countHits(title,CLICKBAIT).length>0);
     if(clickbait.length)issues.push({code:'clickbait-title',severity:'medium',title:'낚시형 제목',detail:`낚시·과장으로 읽힐 수 있는 제목 ${clickbait.length}개가 있어요. 내용을 정확히 담은 제목이 이탈을 줄입니다.`,snippet:clickbait[0].slice(0,40)});
     if(conclusionFirst(text)&&options.hookStyle==='scene')issues.push({code:'conclusion-first',severity:'low',title:'도입이 결론부터',detail:'첫 문장이 결론 요약이에요. 장면·질문으로 시작하는 도입이 스크롤을 멈추게 합니다.'});
-    const rep=repetition(text);
+    const rep=repetition(text);const info=informationSignals(text);
     if(rep.duplicates.length)issues.push({code:'repetition',severity:'medium',title:'반복되는 문장',detail:`거의 같은 문장이 ${rep.duplicates.length}곳 반복돼요. 하나만 남기고 나머지는 다른 경험으로 바꿔보세요.`,snippet:rep.duplicates[0].slice(0,40)});
     if(rep.repeatedStarters.length)issues.push({code:'monotone-start',severity:'low',title:'문단 시작이 단조로움',detail:`여러 문단이 같은 말('${rep.repeatedStarters[0]}…')로 시작해요. 첫 단어를 바꾸면 리듬이 살아요.`});
-    return{issues,goodSignals:good,sentenceAdvice:sentenceAdvice(text),correction:safeCorrect(text),stats:{paragraphs:paragraphs.length,longWalls:walls.length,exaggeration:exaggeration.length,guarantee:guarantee.length,template:template.length,experienceRatio:exp.ratio,experientialSentences:exp.experiential,totalSentences:exp.total,duplicates:repetition(text).duplicates.length}};
+    if(info.fatigue==='높음'&&info.vague>=2)issues.push({code:'reader-fatigue',severity:'high',title:'읽는 사람 피로',detail:'평가하는 말에 비해 시간·가격·장소 같은 확인 가능한 정보가 적어요. 좋았다는 말 하나를 실제 장면 하나로 바꿔보세요.'});
+    if(info.emoji>=5)issues.push({code:'symbol-overuse',severity:'low',title:'기호·이모지 과다',detail:`기호와 이모지가 ${info.emoji}개 있어 본문 흐름을 끊을 수 있어요. 꼭 필요한 표시만 남겨보세요.`});
+    return{issues,goodSignals:good,sentenceAdvice:sentenceAdvice(text),correction:safeCorrect(text),stats:{paragraphs:paragraphs.length,longWalls:walls.length,exaggeration:exaggeration.length,guarantee:guarantee.length,template:template.length,experienceRatio:exp.ratio,experientialSentences:exp.experiential,totalSentences:exp.total,duplicates:rep.duplicates.length,concreteFacts:info.concrete,readerFatigue:info.fatigue,emoji:info.emoji}};
   }
-  return{audit,repetition,safeCorrect,sentenceAdvice,experienceRatio,longWalls,EXAGGERATION,GUARANTEE,TEMPLATE,CLICKBAIT,AD_PUSH};
+  return{audit,repetition,safeCorrect,sentenceAdvice,experienceRatio,longWalls,informationSignals,EXAGGERATION,GUARANTEE,TEMPLATE,CLICKBAIT,AD_PUSH};
 });

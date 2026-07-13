@@ -137,7 +137,7 @@ test('전체 복사 문자열은 제목·본문·해시태그 순서다',()=>{
   const output=Core.formatAll(result,'편집한 본문');
   assert.ok(output.startsWith(result.titles[0]));
   assert.match(output,/편집한 본문/);
-  assert.match(output,/#성수/);
+  assert.match(output,/#카페/);
 });
 
 test('사용자가 본문을 모두 지우면 전체 복사에서 원문을 되살리지 않는다',()=>{
@@ -208,12 +208,16 @@ test('넓은 편집 표시와 구버전 출처 스키마를 구분한다',()=>{
   assert.equal(Core.createPackage({topic:'기록',memo:'오늘 두 시간 걸었어요'}).packageVersion,Core.PACKAGE_VERSION);
 });
 
-test('사용자가 관계 고지를 이미 썼으면 자동 고지를 중복하지 않는다',()=>{
+test('사용자가 관계를 언급해도 법적 고지는 본문 첫 줄에 고정한다',()=>{
   const result=Core.createPackage({topic:'제품 후기',postType:'product',relationship:'provided',experienceFields:{context:'브랜드에서 제품을 제공받아 일주일 썼어요',reason:'크기를 비교하려고 골랐어요',pros:'가방에 넣기 편했어요'}});
-  assert.equal((result.body.match(/제공받/g)||[]).length,1);
-  assert.equal(result.provenance.disclosureAdded,false);
+  assert.ok(result.body.startsWith(Core.requiredDisclosure('provided')));
+  assert.equal(result.provenance.disclosureAdded,true);
   assert.equal(result.provenance.userDisclosure,true);
 });
+
+test('협찬 고지가 지워지거나 중간으로 이동하면 필수 고지 누락으로 판단한다',()=>{const notice=Core.requiredDisclosure('paid');assert.equal(Core.hasRequiredDisclosure(`${notice}\n\n직접 써본 내용입니다.`,'paid'),true);assert.equal(Core.hasRequiredDisclosure(`직접 써본 내용입니다.\n\n${notice}`,'paid'),false);assert.equal(Core.hasRequiredDisclosure('일상 기록입니다.','none'),true)});
+
+test('해시태그는 검색어 채우기처럼 보이지 않게 최대 3개만 만든다',()=>{const tags=Core.createHashtags('성수 조용한 노트북 작업 카페','local','직접 구매했어요','selfpaid','visit');assert.ok(tags.length<=3)});
 
 test('짧은 답변을 교정해 긴 메모 안에 합치고 같은 장면은 반복하지 않는다',()=>{const memo='지난 주말 성수동에 있는 작은 카페에 다녀왔어요. 창가 자리는 햇빛이 잘 들어왔고, 직접 마셔본 라테는 고소한 맛이 진했습니다. 다만 오후에는 사람이 많아 조금 시끄러웠어요. 조용히 머물고 싶다면 오전에 방문하는 편이 좋을 것 같습니다.';const result=Core.createPackage({topic:'성수동 카페 후기',postType:'visit',experienceFields:{context:'지난 주말에.',reason:'노트북 작업 해야해서.',pros:'개인 쓰는 좌석이 컸어요.'},memo});assert.equal((result.body.match(/지난 주말/g)||[]).length,1);assert.match(result.body,/노트북 작업을 해야 해서 이곳을 골랐어요/);assert.match(result.body,/혼자 쓰기 좋은 좌석이 넓었어요/);assert.ok(result.body.indexOf('노트북 작업')>result.body.indexOf('지난 주말 성수동'));assert.ok(result.body.indexOf('혼자 쓰기 좋은 좌석')<result.body.indexOf('다만 오후에는'));assert.doesNotMatch(result.body,/지난 주말에\.|작업 해야해서|개인 쓰는 좌석/)});
 

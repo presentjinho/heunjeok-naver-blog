@@ -93,7 +93,7 @@
       <div class="input-column">
         <section id="tone-tool" class="work-card" aria-labelledby="tone-title">
           <div class="card-heading"><span>02</span><div><h2 id="tone-title">내 문장 습관 <small>선택</small></h2><p>문단 호흡·연결어는 구성에 참고하고 말끝 차이는 결과에서 알려드려요. 기존 글 원문은 저장하지 않습니다.</p></div></div>
-          <label for="toneSamples">내가 쓴 기존 글 <small>최소 30자</small></label>
+          <label for="toneSamples">내가 쓴 기존 글 <small>최소 30자 · 200~500자 권장</small></label>
           <textarea id="toneSamples" rows="6" placeholder="기존 네이버 블로그 글을 30자 이상 붙여넣어 주세요." aria-describedby="toneHelp toneError"></textarea>
           <div class="field-meta"><span id="toneHelp">글이 길수록 말끝과 문장 길이를 더 안정적으로 파악할 수 있어요.</span><strong id="toneCount">0자</strong></div>
           <p id="toneError" class="field-error" hidden></p>
@@ -146,6 +146,7 @@
             <option value="paid">원고료 제공받음</option>
             <option value="affiliate">제휴 링크 포함</option>
           </select>
+          <p id="relationshipNotice" class="relationship-notice" role="status">협찬이 없다면 고지 문구를 넣지 않습니다.</p>
           <div class="workspace-save-row">
             <span id="workspaceSaveState" role="status">입력하면 이 브라우저에 자동 저장돼요.</span>
             <button id="clearWorkspace" class="text-button" type="button">입력만 비우기</button>
@@ -167,6 +168,7 @@
         <div id="emptyResult" class="empty-result"><span aria-hidden="true">✎</span><p>주제를 고르고 경험을 적으면<br>네이버용 글이 여기에 준비됩니다.</p></div>
         <div id="resultContent" hidden>
           <div id="staleNotice" class="stale-notice" hidden>경험 내용이 바뀌었어요. 다시 만들기 전에는 이전 결과를 복사할 수 없습니다.</div>
+          <section id="trustPanel" class="trust-panel" aria-live="polite"><strong>검색 오염 방지 확인</strong><span id="trustSummary">입력한 경험만 초안에 사용합니다.</span></section>
 
           <section class="result-section" aria-labelledby="titles-heading">
             <h3 id="titles-heading">제목 후보</h3>
@@ -176,6 +178,7 @@
           <section class="result-section" aria-labelledby="draft-heading">
             <div class="result-section-heading"><h3 id="draft-heading">편집 가능한 본문</h3><span id="draftSaveState">자동 저장됨</span></div>
             <textarea id="draft" class="draft-editor" rows="18" aria-label="편집 가능한 네이버 블로그 본문"></textarea>
+            <details class="mobile-preview"><summary>휴대폰 화면으로 미리보기</summary><article id="mobilePreview" aria-label="모바일 본문 미리보기"></article></details>
             <div class="version-controls"><label for="draftVersion">최근 본문 버전</label><select id="draftVersion" aria-describedby="versionHelp"><option value="">복구할 버전 선택</option></select><button id="restoreVersion" class="secondary" type="button" disabled>이 버전 복구</button></div>
             <p id="versionHelp" class="help">서로 다른 본문을 최대 10개까지 이 브라우저에만 보관합니다.</p>
           </section>

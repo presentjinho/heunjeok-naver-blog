@@ -1,5 +1,5 @@
 const test=require('node:test');const assert=require('node:assert/strict');
-const {audit,safeCorrect,sentenceAdvice,experienceRatio}=require('../quality');
+const {audit,safeCorrect,sentenceAdvice,experienceRatio,informationSignals}=require('../quality');
 
 test('경험 문장 비율을 계산한다',()=>{
   const r=experienceRatio('저는 어제 직접 방문했어요. 날씨가 좋았습니다. 제가 먹어봤어요.');
@@ -50,3 +50,5 @@ test('repetition은 반복 문장과 단조로운 문단 시작을 잡는다',()
   const result=audit(dup);
   assert.ok(result.issues.some(i=>i.code==='repetition'));
 });
+
+test('구체 정보가 적고 평가만 반복되면 읽는 사람 피로를 경고한다',()=>{const text='정말 좋았어요. 아주 만족했어요. 누구에게나 추천해요. 정말 편리하고 유용했어요.';const result=audit(text);assert.equal(informationSignals(text).fatigue,'높음');assert.ok(result.issues.some(issue=>issue.code==='reader-fatigue'));assert.equal(result.stats.concreteFacts,0)});

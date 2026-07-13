@@ -73,8 +73,10 @@
       {key:'consAudience',label:'남기고 싶은 한 줄은?',heading:'한 줄 기록',placeholder:'예: 다음 주에도 같은 길을 걸어보려고 해요'}
     ]}
   };
-  const PACKAGE_VERSION=2;
+  const PACKAGE_VERSION=3;
   const RELATIONSHIP_TEXT={none:'',selfpaid:'',provided:'이 글은 제품 또는 서비스를 제공받아 작성했습니다.',paid:'이 글은 원고료를 제공받아 작성했습니다.',affiliate:'이 글에는 제휴 링크가 포함되어 있으며, 구매 시 일정 수수료를 받을 수 있습니다.'};
+  function requiredDisclosure(relationship){return RELATIONSHIP_TEXT[relationship]||''}
+  function hasRequiredDisclosure(text,relationship){const required=requiredDisclosure(relationship);return !required||String(text||'').trimStart().startsWith(required)}
   const splitSentences=text=>String(text||'').split(/[.!?。\n]+/).map(value=>value.trim()).filter(Boolean);
   const countWords=text=>String(text||'').trim().split(/\s+/).filter(Boolean).length;
   const evidenceLength=text=>String(text||'').replace(/\s/g,'').length;
@@ -138,9 +140,9 @@
     const typeTags={visit:['방문후기','경험기록'],product:['제품사용기','사용후기'],howto:['방법정리','문제해결'],compare:['비교후기','선택기준'],daily:['일상기록','오늘의기록']};
     const categoryTag={local:'지역정보',travel:'여행정보',beauty:'뷰티기록',parenting:'육아기록',tech:'테크기록',life:'생활정보'};
     const words=String(topic||'').split(/\s+/).map(cleanTopicTag).filter(Boolean).slice(0,4);
-    const tags=[...words,...(typeTags[postType]||typeTags.visit),categoryTag[category]||categoryTag.local];
-    if(relationship==='selfpaid'||/내돈내산|직접\s*구매|구매했/.test(String(memo||'')))tags.push('내돈내산');
-    return[...new Set(tags)].slice(0,8).map(tag=>`#${tag}`);
+    const tags=[...words.slice(-1),(typeTags[postType]||typeTags.visit)[0],categoryTag[category]||categoryTag.local];
+    if(relationship==='selfpaid'||/내돈내산|직접\s*구매|구매했/.test(String(memo||'')))tags.splice(2,1,'내돈내산');
+    return[...new Set(tags)].slice(0,3).map(tag=>`#${tag}`);
   }
   function titleSnippet(value,max=36){
     const clean=String(value||'').replace(/\s+/g,' ').trim();
@@ -207,7 +209,7 @@
     const composedMemo=composeWithMemo(cleanMemo,byKey,postType);const paragraphs=composedMemo||paragraphGroups;
     if(cleanMemo&&!composedMemo)paragraphs.push(cleanSentence(cleanMemo));
     const userDisclosure=[cleanMemo,...structuredAnswers.map(section=>section.text)].some(text=>/(제공받|협찬|원고료|제휴\s*링크|수수료)/.test(text));
-    const disclosure=userDisclosure?'':RELATIONSHIP_TEXT[relationship]||'';
+    const disclosure=requiredDisclosure(relationship);
     const body=[disclosure,...paragraphs].filter(Boolean).join('\n\n');
     const markers=String(photoNotes||'').split(/\n+/).map(value=>value.trim()).filter(Boolean);const photoPlan=markers.length?markers:photoSuggestions(category);
     const evidenceText=[cleanMemo,...meaningfulAnswers.map(section=>section.text)].filter(Boolean).join(' ');const hashtags=createHashtags(cleanTopic,category,evidenceText,relationship,postType);
@@ -246,5 +248,5 @@
   }
   function createReplyCandidates(comment,tone){const value=String(comment||'').trim();const question=/\?|궁금|어떻게|어디|언제|얼마|인가요|나요/.test(value);const praise=/감사|도움|좋|잘\s*봤|유용/.test(value);const shared=/저도|저는|저희|제 경우|저 같은/.test(value);const friendly=tone&&tone.ending&&tone.ending.includes('존댓말');const casual=tone&&tone.ending&&tone.ending.includes('반말');if(question)return friendly?['질문 남겨주셔서 감사해요. 제가 확인한 범위에서는 [답변을 적어주세요]. 달라진 내용이 있으면 본문에도 반영할게요.','궁금하셨던 부분은 [답변을 적어주세요]. 방문이나 구매 전에는 최신 정보도 한 번 확인해 주세요.','좋은 질문이에요. 제가 경험한 상황은 [상황을 적어주세요]였고, 그때는 [답변을 적어주세요].']:casual?['질문 고마워. 내가 확인한 범위에서는 [답변을 적어줘]. 달라진 내용이 있으면 본문에도 반영할게.','궁금했던 부분은 [답변을 적어줘]. 결정 전에는 최신 정보도 한 번 확인해 봐.','좋은 질문이야. 내 상황은 [상황을 적어줘]였고, 그때는 [답변을 적어줘].']:['질문 감사합니다. 확인한 범위에서는 [답변을 적어주세요]. 변경된 내용이 있으면 본문에도 반영하겠습니다.','문의하신 부분은 [답변을 적어주세요]. 결정 전 최신 정보도 확인하시기 바랍니다.','좋은 질문입니다. 당시 상황은 [상황을 적어주세요]였으며, 답변은 [답변을 적어주세요].'];if(shared)return['경험을 나눠주셔서 감사해요. 같은 주제라도 상황에 따라 다를 수 있다는 점이 정말 도움이 되네요.','댓글로 알려주신 경험도 참고할게요. 다른 분들에게도 유용한 정보가 될 것 같아요.','저와 다른 경험을 들려주셔서 감사해요. 다음에 다시 확인할 때 함께 살펴볼게요.'];if(praise)return['좋게 봐주셔서 감사해요. 도움이 되었다니 기뻐요!','따뜻한 댓글 감사합니다. 다음 기록도 꼼꼼하게 준비해볼게요.','읽어주시고 댓글까지 남겨주셔서 감사해요. 좋은 하루 보내세요!'];return['댓글 남겨주셔서 감사해요. 말씀해주신 내용도 잘 참고할게요.','읽어주시고 의견 나눠주셔서 감사합니다. 다음 글에도 반영해볼게요.','소중한 댓글 감사합니다. 덕분에 놓친 부분을 다시 생각해보게 됐어요.']}
   function formatAll(pkg,draft){const body=draft===undefined||draft===null?pkg.body:draft;return`${pkg.titles[0]}\n\n${String(body||'').trim()}\n\n${pkg.hashtags.join(' ')}`}
-  return{PACKAGE_VERSION,normalizeNaverBlogUrl,normalizeNaverPostUrl,getTopics,getInterviewFields,analyzeTone,evaluateSpecificity,polishEvidence,evidenceOverlap,composeWithMemo,createPackage,auditHumanDraft,createHashtags,createReplyCandidates,formatAll,splitSentences};
+  return{PACKAGE_VERSION,normalizeNaverBlogUrl,normalizeNaverPostUrl,getTopics,getInterviewFields,analyzeTone,evaluateSpecificity,polishEvidence,evidenceOverlap,composeWithMemo,requiredDisclosure,hasRequiredDisclosure,createPackage,auditHumanDraft,createHashtags,createReplyCandidates,formatAll,splitSentences};
 });
