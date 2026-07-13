@@ -40,7 +40,9 @@ jobs:
         shell: bash
         run: |
           mkdir _site
-          cp index.html privacy.html security.html favicon.svg *.css app.js core.js history.js photo-vault.js benchmark.js quality.js assemble.js improve-ui.js postlog.js postlog-ui.js benchmark-ui.js daily.js daily-ui.js backup.js product-v2.js _site/
+          cp index.html guide.html privacy.html security.html favicon.svg og-card.svg *.css app.js core.js history.js photo-vault.js benchmark.js quality.js assemble.js improve-ui.js postlog.js postlog-ui.js benchmark-ui.js daily.js daily-ui.js backup.js product-v2.js _site/
+          BUILD_SHA="${GITHUB_SHA::7}"
+          sed -E -i "s/\?v=[A-Za-z0-9._-]+/?v=${BUILD_SHA}/g; s/(name=\"heunjeok-build\" content=\")[^\"]+/\1${BUILD_SHA}/" _site/index.html
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v4
         with:

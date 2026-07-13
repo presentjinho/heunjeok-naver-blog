@@ -248,7 +248,21 @@
     if(/다녀왔|방문했|사용했|써봤|먹었|느꼈|구매했|골랐|선택했|걸었|정리했|삭제했|비교했|설정했|확인했|만들었/.test(value))goodSignals.push('내 행동과 판단이 드러나요');
     return{issues,goodSignals,blocking:issues.some(issue=>['placeholder','title-placeholder'].includes(issue.code))};
   }
+  function canGenerate({topic='',answers={},memo='',postType='visit'}={}){
+    const essential=getInterviewFields(postType).filter(field=>field.essential);const missing=essential.filter(field=>evidenceLength(answers[field.key])<5);const memoStatus=evaluateSpecificity(memo,{},postType);const memoReady=evidenceLength(memo)>=30&&memoStatus.signals.experience;
+    if(!String(topic||'').trim())return{ok:false,reason:'주제를 먼저 골라주세요.',missing:essential.map(field=>field.key),memoReady:false};
+    if(missing.length&&!memoReady)return{ok:false,reason:`핵심 질문 ${missing.map(field=>essential.indexOf(field)+1).join(', ')}에 다섯 글자 이상 적거나, 추가 메모에 실제 경험을 30자 이상 적어주세요.`,missing:missing.map(field=>field.key),memoReady:false};
+    return{ok:true,reason:memoReady&&missing.length?'핵심 답변 대신 실제 경험 메모로 만들 수 있어요.':'입력한 경험으로 초안을 만들 수 있어요.',missing:missing.map(field=>field.key),memoReady};
+  }
+  function canCopy({hasPackage=false,stale=false,packageCurrent=true,draft='',trustReasons=[]}={}){
+    if(!hasPackage)return{ok:false,reason:'초안을 먼저 만들어주세요.'};
+    if(stale)return{ok:false,reason:'경험을 고쳐 초안이 오래되었습니다. 다시 만들면 복사할 수 있어요.'};
+    if(!packageCurrent)return{ok:false,reason:'이전 버전 초안은 현재 규칙으로 다시 만들어야 복사할 수 있어요.'};
+    if(!String(draft||'').trim())return{ok:false,reason:'본문이 비어 있어 복사할 수 없어요.'};
+    const reasons=(Array.isArray(trustReasons)?trustReasons:[]).filter(Boolean);if(reasons.length)return{ok:false,reason:reasons.join(' ')};
+    return{ok:true,reason:''};
+  }
   function createReplyCandidates(comment,tone){const value=String(comment||'').trim();const question=/\?|궁금|어떻게|어디|언제|얼마|인가요|나요/.test(value);const praise=/감사|도움|좋|잘\s*봤|유용/.test(value);const shared=/저도|저는|저희|제 경우|저 같은/.test(value);const friendly=tone&&tone.ending&&tone.ending.includes('존댓말');const casual=tone&&tone.ending&&tone.ending.includes('반말');if(question)return friendly?['질문 남겨주셔서 감사해요. 제가 확인한 범위에서는 [답변을 적어주세요]. 달라진 내용이 있으면 본문에도 반영할게요.','궁금하셨던 부분은 [답변을 적어주세요]. 방문이나 구매 전에는 최신 정보도 한 번 확인해 주세요.','좋은 질문이에요. 제가 경험한 상황은 [상황을 적어주세요]였고, 그때는 [답변을 적어주세요].']:casual?['질문 고마워. 내가 확인한 범위에서는 [답변을 적어줘]. 달라진 내용이 있으면 본문에도 반영할게.','궁금했던 부분은 [답변을 적어줘]. 결정 전에는 최신 정보도 한 번 확인해 봐.','좋은 질문이야. 내 상황은 [상황을 적어줘]였고, 그때는 [답변을 적어줘].']:['질문 감사합니다. 확인한 범위에서는 [답변을 적어주세요]. 변경된 내용이 있으면 본문에도 반영하겠습니다.','문의하신 부분은 [답변을 적어주세요]. 결정 전 최신 정보도 확인하시기 바랍니다.','좋은 질문입니다. 당시 상황은 [상황을 적어주세요]였으며, 답변은 [답변을 적어주세요].'];if(shared)return['경험을 나눠주셔서 감사해요. 같은 주제라도 상황에 따라 다를 수 있다는 점이 정말 도움이 되네요.','댓글로 알려주신 경험도 참고할게요. 다른 분들에게도 유용한 정보가 될 것 같아요.','저와 다른 경험을 들려주셔서 감사해요. 다음에 다시 확인할 때 함께 살펴볼게요.'];if(praise)return['좋게 봐주셔서 감사해요. 도움이 되었다니 기뻐요!','따뜻한 댓글 감사합니다. 다음 기록도 꼼꼼하게 준비해볼게요.','읽어주시고 댓글까지 남겨주셔서 감사해요. 좋은 하루 보내세요!'];return['댓글 남겨주셔서 감사해요. 말씀해주신 내용도 잘 참고할게요.','읽어주시고 의견 나눠주셔서 감사합니다. 다음 글에도 반영해볼게요.','소중한 댓글 감사합니다. 덕분에 놓친 부분을 다시 생각해보게 됐어요.']}
   function formatAll(pkg,draft){const body=draft===undefined||draft===null?pkg.body:draft;return`${pkg.titles[0]}\n\n${String(body||'').trim()}\n\n${pkg.hashtags.join(' ')}`}
-  return{PACKAGE_VERSION,normalizeNaverBlogUrl,normalizeNaverPostUrl,getTopics,getInterviewFields,analyzeTone,applyToneStrength,evaluateSpecificity,polishEvidence,evidenceOverlap,composeWithMemo,requiredDisclosure,hasRequiredDisclosure,createPackage,auditHumanDraft,createHashtags,createReplyCandidates,formatAll,splitSentences};
+  return{PACKAGE_VERSION,normalizeNaverBlogUrl,normalizeNaverPostUrl,getTopics,getInterviewFields,analyzeTone,applyToneStrength,evaluateSpecificity,polishEvidence,evidenceOverlap,composeWithMemo,requiredDisclosure,hasRequiredDisclosure,createPackage,auditHumanDraft,canGenerate,canCopy,createHashtags,createReplyCandidates,formatAll,splitSentences};
 });
