@@ -34,3 +34,13 @@ test('뼈대는 없는 사실을 만들지 않는다는 안내를 포함한다',
   assert.match(result.note,/사실을 만들/);
 });
 test('도입 훅은 다섯 가지 방식마다 편집 가능한 후보 세 개를 제공한다',()=>{for(const style of ['scene','question','contrast','problem','detail']){const result=build({topic:'카페 후기',postType:'visit',hookStyle:style});assert.equal(result.hook,HOOKS[style]);assert.equal(result.hookCandidates.length,3);assert.ok(result.hookCandidates.every(candidate=>candidate.includes('[')))}});
+
+test('assembleToText는 소제목과 빈 슬롯만 만들고 경험을 중복 삽입하지 않는다',()=>{
+  const {build,assembleToText}=require('../assemble');
+  const text=assembleToText(build({topic:'성수동 카페',postType:'visit',experienceFields:{visit_time:'토요일 오후 방문'},hookStyle:'scene'}));
+  assert.match(text,/■ /);
+  assert.match(text,/\[여기에/);
+  assert.doesNotMatch(text,/토요일 오후 방문/); // 경험 원문을 뼈대에 재삽입하지 않음
+  assert.doesNotMatch(text,/\[도입\]/);
+  assert.equal(assembleToText(null),'');
+});

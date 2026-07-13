@@ -40,3 +40,13 @@ test('안전 교정본은 과장·보장·상투 문구를 줄이고 새 사실 
 test('문장별 조언은 문제 문장과 원인을 연결한다',()=>{const result=sentenceAdvice('무조건 최고입니다. 저는 직접 써봤어요. 구매 링크 클릭.');assert.ok(result.some(item=>item.flags.includes('과장')));assert.ok(result.some(item=>item.flags.includes('홍보 압박')));assert.ok(result.every(item=>item.text&&item.advice))});
 
 test('긴 문단 교정은 두 문장 단위로 나누되 문장을 만들지 않는다',()=>{const source='첫 문장입니다. 두 번째 문장입니다. 세 번째 문장입니다. 네 번째 문장입니다.';const result=safeCorrect(source);assert.match(result.text,/두 번째 문장입니다\.\n\n세 번째/);for(const sentence of ['첫 문장입니다.','두 번째 문장입니다.','세 번째 문장입니다.','네 번째 문장입니다.'])assert.match(result.text,new RegExp(sentence.replace('.','\\.')))});
+
+test('repetition은 반복 문장과 단조로운 문단 시작을 잡는다',()=>{
+  const {audit,repetition}=require('../quality');
+  const dup='저는 직접 방문했어요. 날씨가 맑았습니다. 저는 직접 방문했어요.';
+  assert.ok(repetition(dup).duplicates.length>=1);
+  const monotone=['저는 갔어요. 좋았습니다.','저는 먹었어요. 맛있었습니다.','저는 봤어요. 예뻤습니다.'].join('\n\n');
+  assert.ok(repetition(monotone).repeatedStarters.length>=1);
+  const result=audit(dup);
+  assert.ok(result.issues.some(i=>i.code==='repetition'));
+});

@@ -36,6 +36,14 @@
   }
   function stageEditorChecklist(){return['소제목마다 내 경험 문장이 최소 1개 있는가','과장·보장 표현을 뺐는가','도입이 결론 요약이 아니라 장면·질문인가','문단이 모바일에서 2~3줄인가','복붙 템플릿 문구(알아보겠습니다·총정리 등)를 지웠는가','광고·협찬 관계를 표시했는가'];}
   function hookCandidates(topic,style){const subject=cleanLine(topic,50)||'이 경험';const templates={scene:[`[언제·어디서] ${subject}을(를) 마주한 첫 장면부터 적어보세요.`,`[보이거나 들린 것] 하나를 먼저 쓰고 ${subject} 이야기로 연결하세요.`,`[짧은 행동]을 한 순간을 적은 뒤 그 이유를 밝혀보세요.`],question:[`${subject}, [독자가 가장 궁금해할 한 가지]는 어땠을까요?`,`[선택을 망설인 이유]가 있다면 무엇이었을까요?`,`[직접 확인하기 전의 질문]을 한 문장으로 던져보세요.`],contrast:[`${subject}은(는) [기대]와 달리 [직접 확인한 차이]가 있었어요.`,`가기 전에는 [예상], 실제로는 [경험]이었습니다.`,`[좋을 줄 알았던 점]보다 [의외였던 점]이 먼저 보였어요.`],problem:[`[구체적인 불편] 때문에 ${subject}을(를) 찾아보기 시작했어요.`,`[문제가 생긴 순간]부터 해결 과정을 차례로 적어보세요.`,`처음 막힌 건 [문제]였고, 직접 해 본 첫 선택은 [행동]이었어요.`],detail:[`[시간]의 [장소], 가장 먼저 눈에 들어온 건 [구체적인 대상]이었어요.`,`[소리·냄새·촉감] 중 직접 느낀 하나로 ${subject}을(를) 시작하세요.`,`[누구와 무엇을 하던 순간]의 작은 장면을 한 문장으로 적어보세요.`]};return templates[style]||templates.scene}
+  function assembleToText(result){
+    if(!result||!Array.isArray(result.stages))return '';
+    const sections=(result.stages.find(s=>s.step===3)||{}).items||[];
+    if(!sections.length)return '';
+    const lines=['# 4단계 뼈대 (소제목별로 내 경험만 채우기)'];
+    sections.forEach(section=>{lines.push('');lines.push('■ '+section.heading);lines.push('[여기에 이 소제목에 해당하는 내 경험을 2~3문장으로 적어주세요]')});
+    return lines.join('\n');
+  }
   function build({topic,postType,experienceFields,hookStyle}={}){
     const type=typeOf(postType);
     return{
@@ -51,5 +59,5 @@
       note:'각 문단의 대괄호 슬롯을 내 경험으로 채우세요. 이 뼈대는 사실을 만들어내지 않습니다.'
     };
   }
-  return{build,stageReaderQuestions,stageOutline,stageSections,stageEditorChecklist,hookCandidates,HOOKS};
+  return{build,assembleToText,stageReaderQuestions,stageOutline,stageSections,stageEditorChecklist,hookCandidates,HOOKS};
 });

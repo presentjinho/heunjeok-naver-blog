@@ -145,13 +145,23 @@
   function titleSnippet(value,max=36){
     const clean=String(value||'').replace(/\s+/g,' ').trim();
     const candidates=clean.split(/[.!?。]|[,，;:]/).map(part=>part.trim()).filter(Boolean);
-    return candidates.find(part=>part.length>=4&&part.length<=max&&!/(?:고|며|면|서|는데|지만|해서|하며|이고|그리고|및|또는|때문에|거나)$/.test(part))||'';
+    return candidates.find(part=>part.length>=4&&part.length<=max&&/\s/.test(part)&&!/\d$/.test(part)&&!/(?:고|며|면|서|는데|지만|해서|하며|이고|그리고|및|또는|때문에|거나)$/.test(part))||'';
   }
   function createTitles(topic,byKey,postType){
-    const plans={visit:[[['pros','consAudience','costTime'],'써본 뒤 판단'],[['context','reason','process'],'방문한 때와 분위기']],product:[[['pros','consAudience','costTime'],'사용한 뒤 판단'],[['reason','context','process'],'고른 이유']],howto:[[['pros','costTime','consAudience'],'해본 뒤 결과'],[['process','reason','context'],'실제로 해본 순서']],compare:[[['pros','consAudience','costTime'],'비교 뒤 선택'],[['reason','process','context'],'비교하게 된 이유']],daily:[[['pros','consAudience','costTime'],'그날 느낀 점'],[['context','reason','process'],'그날의 장면']]};
-    const maxSnippet=Math.max(12,52-topic.length-2);const used=new Set();
-    const variants=(plans[postType]||plans.visit).map(([keys,fallback])=>{const found=keys.map(key=>titleSnippet(byKey[key]&&byKey[key].text,maxSnippet)).find(text=>text&&!used.has(text))||fallback;used.add(found);return found});
-    return[topic,...variants.map(text=>`${topic}, ${text}`)].filter((title,index,array)=>array.indexOf(title)===index).slice(0,3);
+    const plans={visit:[[['pros','consAudience','costTime'],'써본 뒤 판단'],[['context','reason','process'],'방문한 때와 분위기']],product:[[['pros','consAudience','costTime'],'사용한 뒤 판단'],[['reason','context','process'],'고른 이유']],howto:[[['pros','costTime','consAudience'],'해본 뒤 결과'],[['process','reason','context'],'직접 해본 순서 정리']],compare:[[['pros','consAudience','costTime'],'비교 뒤 선택'],[['reason','process','context'],'비교하게 된 이유']],daily:[[['pros','consAudience','costTime'],'그날 느낀 점'],[['context','reason','process'],'그날의 장면']]};
+    const extra={visit:['방문 시간과 분위기 기록','메뉴와 자리 후기'],product:['써보고 남긴 장단점','고른 이유와 사용감'],howto:['해보고 남긴 순서와 결과','겪은 시행착오와 팁'],compare:['비교 기준과 최종 선택','상황별 추천'],daily:['그날의 장면과 생각','오래 남은 여운']};
+    const [primary,secondary]=(plans[postType]||plans.visit);
+    const fit=Math.max(10,52-topic.length-2);
+    const pick=(keys,max)=>keys.map(key=>titleSnippet(byKey[key]&&byKey[key].text,max)).find(Boolean)||'';
+    const standalone=pick(primary[0],46);
+    const pool=[topic];
+    // 2번: 강한 경험 스니펫이면 접두어 없이 단독 제목
+    pool.push(standalone&&standalone.length>=10&&standalone!==topic?standalone:`${topic}, ${primary[1]}`);
+    // 3번 이후: 접두어 제목은 경험 원문을 덤프하지 않고 큐레이션된 마무리 각도만 사용
+    [secondary[1],primary[1],...(extra[postType]||extra.visit)].forEach(tail=>pool.push(`${topic}, ${tail}`));
+    const bad=/(?:고|며|면|서|는데|지만|해서|하며|이고|그리고|및|또는|때문에|거나)$/;
+    const out=[];for(const raw of pool){const title=raw.length<=52?raw:raw.slice(0,52).replace(/[,\s]+\S*$/,'');if(!title||title.length>52||out.includes(title))continue;if(out.length>0&&bad.test(title))continue;out.push(title);if(out.length===3)break}
+    return out;
   }
   function cleanSentence(value){const clean=String(value||'').trim();if(!clean)return'';return/[.!?。~…ㅋㅎ]$/.test(clean)?clean:`${clean}.`}
   function polishEvidence(value,key,postType='visit'){

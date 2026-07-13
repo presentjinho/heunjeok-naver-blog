@@ -18,8 +18,8 @@
   const SAFE_REPLACEMENTS=[
     [/100%\s*(보장(?:합니다)?|확실(?:합니다)?)/g,'[직접 확인한 조건과 범위를 적어주세요]'],
     [/(상위\s*노출|효과)\s*(을|를|이|가)?\s*(보장(?:합니다)?|확실(?:합니다)?)/g,'[확인할 수 없는 결과 단정은 삭제하고 내 경험만 적어주세요]'],
-    [/(무조건|반드시|절대)\s*/g,''],
-    [/(강력\s*추천|강추|최고의?|완벽한?|역대급|끝판왕|초대박|대박)/g,''],
+    [/(무조건|반드시|절대|진짜|정말|완전|엄청)\s+/g,''],
+    [/(최고의|완벽한|역대급|끝판왕|초대박|인생템|갓성비|필수템|강력\s*추천|강추)\s+/g,''],
     [/(오늘은\s*)?(.{0,30})에 대해 알아보겠습니다[.!]?/g,''],
     [/(지금부터|자 그럼|그럼 시작|함께 알아봐요|포스팅을 시작(?:합니다)?)[.!]?/g,''],
     [/(도움이 되셨길|도움이 되셨다면)[^.!?]*[.!]?/g,'']
@@ -27,6 +27,13 @@
   function reflowParagraph(paragraph){const sentences=splitSentences(paragraph);if(sentences.length<=3&&paragraph.replace(/\s/g,'').length<=MOBILE_PARAGRAPH_CHARS)return paragraph;const groups=[];for(let index=0;index<sentences.length;index+=2)groups.push(sentences.slice(index,index+2).join(' '));return groups.join('\n\n')}
   function safeCorrect(draft){let text=normalize(draft);const changes=[];for(const [pattern,replacement] of SAFE_REPLACEMENTS){text=text.replace(pattern,match=>{changes.push({before:match.trim(),after:replacement||'(삭제)',reason:replacement?'단정·상투 표현을 검토 자리로 바꿈':'불필요한 과장·상투 표현 삭제'});return replacement})}text=splitParagraphs(text).map(reflowParagraph).join('\n\n').replace(/[ \t]+([.!?])/g,'$1').replace(/ {2,}/g,' ').replace(/\n{3,}/g,'\n\n').trim();return{text,changes:changes.slice(0,30),changed:text!==normalize(draft).trim()}}
   function sentenceAdvice(draft){return splitSentences(draft).map((sentence,index)=>{const flags=[];if(countHits(sentence,GUARANTEE).length)flags.push('결과 단정');if(countHits(sentence,EXAGGERATION).length)flags.push('과장');if(countHits(sentence,TEMPLATE).length)flags.push('상투 문구');if(countHits(sentence,AD_PUSH).length)flags.push('홍보 압박');if(sentence.replace(/\s/g,'').length>90)flags.push('긴 문장');return{index:index+1,text:sentence.slice(0,140),flags,advice:flags.length?`${flags.join(' · ')}을 고치고 직접 확인한 장면·조건만 남겨보세요.`:'현재 규칙에서 뚜렷한 경고 없음'}}).filter(item=>item.flags.length).slice(0,20)}
+  function repetition(text){
+    const sentences=splitSentences(text);const seen=new Map();const duplicates=[];
+    for(const sentence of sentences){const key=sentence.replace(/\s/g,'');if(key.length<6)continue;if(seen.has(key)){if(!duplicates.includes(sentence))duplicates.push(sentence)}else seen.set(key,1)}
+    const starters={};for(const paragraph of splitParagraphs(text)){const first=((splitSentences(paragraph)[0]||'').trim().split(/\s+/)[0]||'');if(first.length>=2)starters[first]=(starters[first]||0)+1}
+    const repeatedStarters=Object.keys(starters).filter(key=>starters[key]>=3);
+    return{duplicates:duplicates.slice(0,5),repeatedStarters};
+  }
   function audit(draft,options={}){
     const text=normalize(draft);const issues=[];const good=[];
     const paragraphs=splitParagraphs(text);
@@ -48,7 +55,10 @@
     const clickbait=titles.filter(title=>countHits(title,CLICKBAIT).length>0);
     if(clickbait.length)issues.push({code:'clickbait-title',severity:'medium',title:'낚시형 제목',detail:`낚시·과장으로 읽힐 수 있는 제목 ${clickbait.length}개가 있어요. 내용을 정확히 담은 제목이 이탈을 줄입니다.`,snippet:clickbait[0].slice(0,40)});
     if(conclusionFirst(text)&&options.hookStyle==='scene')issues.push({code:'conclusion-first',severity:'low',title:'도입이 결론부터',detail:'첫 문장이 결론 요약이에요. 장면·질문으로 시작하는 도입이 스크롤을 멈추게 합니다.'});
-    return{issues,goodSignals:good,sentenceAdvice:sentenceAdvice(text),correction:safeCorrect(text),stats:{paragraphs:paragraphs.length,longWalls:walls.length,exaggeration:exaggeration.length,guarantee:guarantee.length,template:template.length,experienceRatio:exp.ratio,experientialSentences:exp.experiential,totalSentences:exp.total}};
+    const rep=repetition(text);
+    if(rep.duplicates.length)issues.push({code:'repetition',severity:'medium',title:'반복되는 문장',detail:`거의 같은 문장이 ${rep.duplicates.length}곳 반복돼요. 하나만 남기고 나머지는 다른 경험으로 바꿔보세요.`,snippet:rep.duplicates[0].slice(0,40)});
+    if(rep.repeatedStarters.length)issues.push({code:'monotone-start',severity:'low',title:'문단 시작이 단조로움',detail:`여러 문단이 같은 말('${rep.repeatedStarters[0]}…')로 시작해요. 첫 단어를 바꾸면 리듬이 살아요.`});
+    return{issues,goodSignals:good,sentenceAdvice:sentenceAdvice(text),correction:safeCorrect(text),stats:{paragraphs:paragraphs.length,longWalls:walls.length,exaggeration:exaggeration.length,guarantee:guarantee.length,template:template.length,experienceRatio:exp.ratio,experientialSentences:exp.experiential,totalSentences:exp.total,duplicates:repetition(text).duplicates.length}};
   }
-  return{audit,safeCorrect,sentenceAdvice,experienceRatio,longWalls,EXAGGERATION,GUARANTEE,TEMPLATE,CLICKBAIT,AD_PUSH};
+  return{audit,repetition,safeCorrect,sentenceAdvice,experienceRatio,longWalls,EXAGGERATION,GUARANTEE,TEMPLATE,CLICKBAIT,AD_PUSH};
 });
