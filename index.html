@@ -45,20 +45,6 @@
       <p class="hero-copy">짧은 경험 질문에 답하면 내 문장을 중심으로 초안을 엮고, 틀에 박힌 표현과 빠진 확인 항목을 따로 보여줍니다.</p>
     </section>
 
-    <section class="connection-card" aria-labelledby="connection-title">
-      <div>
-        <p class="section-number">내 블로그</p>
-        <h2 id="connection-title">네이버 블로그 주소 연결</h2>
-        <p>로그인 없이 주소만 이 브라우저에 저장합니다. 네이버 계정·비밀번호·로그인 쿠키는 받지 않으며 자동 발행 권한도 요청하지 않습니다.</p>
-      </div>
-      <div class="connection-form">
-        <label for="blogUrl">내 블로그 주소</label>
-        <div class="connection-input-row"><input id="blogUrl" type="url" inputmode="url" autocomplete="url" maxlength="300" placeholder="https://blog.naver.com/myid" aria-describedby="blogUrlHelp blogConnectionStatus"><button id="connectBlog" class="secondary" type="button">주소 연결</button></div>
-        <p id="blogUrlHelp">공식 네이버 블로그 주소만 허용하며 주소에 포함된 블로그 ID만 저장합니다.</p>
-        <div class="connection-state"><strong id="blogConnectionStatus" role="status">연결된 블로그 없음</strong><div><a id="openConnectedBlog" class="text-link" target="_blank" rel="noopener noreferrer" hidden>내 블로그 열기</a><button id="disconnectBlog" class="text-button" type="button" hidden>연결 해제</button></div></div>
-      </div>
-    </section>
-
     <ol class="steps" aria-label="글 준비 단계">
       <li class="is-current" aria-current="step"><span>1</span> 주제 고르기</li>
       <li><span>2</span> 말투 <small>선택</small></li>
@@ -111,9 +97,6 @@
           <textarea id="toneSamples" rows="6" placeholder="기존 네이버 블로그 글을 30자 이상 붙여넣어 주세요." aria-describedby="toneHelp toneError"></textarea>
           <div class="field-meta"><span id="toneHelp">글이 길수록 말끝과 문장 길이를 더 안정적으로 파악할 수 있어요.</span><strong id="toneCount">0자</strong></div>
           <p id="toneError" class="field-error" hidden></p>
-          <label for="toneSourceUrl">이 글의 네이버 주소 <small>선택</small></label>
-          <input id="toneSourceUrl" type="url" inputmode="url" maxlength="500" placeholder="https://blog.naver.com/내아이디/게시글번호">
-          <label class="consent-check"><input id="approveToneSource" type="checkbox"> 이 글을 말투 분석에 사용하는 데 동의합니다. 원문은 저장하지 않습니다.</label>
           <label for="avoidPhrases">내가 쓰지 않는 표현 <small>선택</small></label>
           <input id="avoidPhrases" placeholder="쉼표로 구분: 오늘은 알아보겠습니다, 강력 추천, 총정리">
           <div class="action-row">
