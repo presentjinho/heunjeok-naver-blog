@@ -46,9 +46,8 @@
   function crossActions(){
     const wrap=$('qualityResult');if(!wrap||$('qualityCross'))return;
     const row=document.createElement('div');row.id='qualityCross';row.className='improve-controls';
-    const cmp=document.createElement('button');cmp.type='button';cmp.className='secondary';cmp.textContent='잘 나온 글과 구조 비교';cmp.addEventListener('click',()=>{goto('benchmark-title');const b=$('benchmarkReference');if(b)b.focus({preventScroll:true})});
     const log=document.createElement('button');log.type='button';log.className='secondary';log.textContent='발행 기록에 저장';log.addEventListener('click',()=>{goto('postlog-title');const pull=$('logPull');if(pull)pull.click();const t=$('logTopic');if(t)t.focus({preventScroll:true})});
-    row.append(cmp,log);wrap.append(row);
+    row.append(log);wrap.append(row);
   }
   function renderQuality(result){
     const host=$('qualityList');if(!host)return;host.innerHTML='';
@@ -84,7 +83,7 @@
     const bar=document.createElement('span');bar.className='length-bar';const fill=document.createElement('i');bar.append(fill);
     const hint=document.createElement('small');hint.className='length-hint';
     wrap.append(count,sel,bar,hint);draft.insertAdjacentElement('afterend',wrap);
-    function update(){const n=draft.value.replace(/\s/g,'').length;const t=lengthTarget();const pct=Math.max(0,Math.min(100,Math.round(n/t*100)));count.textContent=n.toLocaleString('ko-KR')+'자';fill.style.width=pct+'%';wrap.dataset.state=n>=t?'done':n>=Math.round(t*0.7)?'near':'low';hint.textContent=n>=t?'목표 분량 달성 · 이제 검수로 군더더기를 덜어내세요':'목표까지 약 '+Math.max(0,t-n).toLocaleString('ko-KR')+'자 · 소제목마다 경험 2~3문장을 더 채워보세요';}
+    function update(){const n=draft.value.replace(/\s/g,'').length;const t=lengthTarget();const pct=Math.max(0,Math.min(100,Math.round(n/t*100)));count.textContent=n.toLocaleString('ko-KR')+'자';fill.style.width=pct+'%';wrap.dataset.state=n>=t?'done':n>=Math.round(t*0.7)?'near':'low';hint.textContent=n>=t?'목표 분량 달성 · 억지로 늘리지 말고 검수로 군더더기를 덜어내세요':'목표는 참고용이에요 · 빈 말로 늘리지 말고 소제목마다 겪은 장면을 2~3문장씩 채워요 (약 '+Math.max(0,t-n).toLocaleString('ko-KR')+'자 남음)';}
     sel.addEventListener('change',()=>{localStorage.setItem(LENGTH_KEY,sel.value);update()});
     draft.addEventListener('input',update);update();
   }

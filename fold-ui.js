@@ -41,7 +41,6 @@
   [
     ['[aria-labelledby="live-research-title"]','참고 · 문장 말고 구조만'],
     ['#live-research','참고 · 문장 말고 구조만'],
-    ['[aria-labelledby="benchmark-title"]','고급 · 구조 비교'],
     ['[aria-labelledby="comment-title"]','발행 후 · 필요할 때만'],
     ['[aria-labelledby="assemble-title"]','선택 · 뼈대부터 쌓기'],
     ['#hook-tool','선택 · 뼈대부터 쌓기'],

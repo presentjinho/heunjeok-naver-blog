@@ -15,7 +15,7 @@ function boot(){
 itDom('부가 도구가 접힌 details로 변환된다',()=>{
   const d=boot();
   const folded=d.querySelectorAll('details.folded-tool');
-  assert.ok(folded.length>=3,'최소 3개 접힘');
+  assert.ok(folded.length>=2,'최소 2개 접힘');
   assert.ok([...folded].every(el=>!el.open),'기본 접힘');
 });
 itDom('제목은 요약에 남고 본문에는 중복 없음, 원래 요소는 보존',()=>{

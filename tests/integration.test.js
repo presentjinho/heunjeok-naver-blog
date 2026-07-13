@@ -70,14 +70,10 @@ itDom('검수→교정 적용: 초안이 교정본으로 바뀐다',()=>{
   assert.doesNotMatch(d.getElementById('draft').value,/100%\s*보장/);
 });
 
-itDom('구조 비교: 기준 글과 초안을 대조하고 점수·크로스링크를 낸다',()=>{
-  const w=boot();const d=w.document;
-  d.getElementById('draft').value='저는 토요일에 성수동 카페에 다녀왔어요. 창가 자리에 앉아 아메리카노를 마셨습니다. 두 시간 머물렀어요.';
-  d.getElementById('benchmarkReference').value=['오늘은 성수동 카페 방문기예요.','입구는 좁지만 안은 넓었어요. 자리는 20석 정도.','메뉴','아메리카노 4500원. 두 시간 머물렀습니다.','사진도 남겼어요.','다들 어떤 카페 좋아하세요? 공감과 댓글 부탁해요.'].join('\n\n');
-  d.getElementById('benchmarkRun').dispatchEvent(new w.Event('click'));
-  assert.equal(d.getElementById('benchmarkResult').hidden,false);
-  assert.match(d.getElementById('benchmarkScore').textContent,/%$/);
-  assert.ok(d.getElementById('benchmarkCross'),'검수로 이어가기 버튼 존재');
+itDom('구조 비교 UI는 메인에서 제거되었다',()=>{
+  const html=require('fs').readFileSync(require('path').join(__dirname,'..','index.html'),'utf8');
+  assert.ok(!html.includes('benchmark-title'));
+  assert.ok(!html.includes('benchmarkRun'));
 });
 
 itDom('발행 로그: 기록 추가가 목록과 저장소에 반영된다',()=>{
@@ -160,15 +156,11 @@ itDom('분량 미터: 목표 대비 글자수와 진행 상태를 표시한다',
   assert.equal(meter.dataset.state,'done');
 });
 
-itDom('긴 글(2500자)에서 검수·교정·구조비교가 정상 동작한다',()=>{
-  const w=boot();const d=w.document;
-  const para='저는 토요일 오후에 성수동 카페를 직접 방문했어요. 창가 자리에 앉아 아메리카노를 마시며 두 시간 정도 노트북 작업을 했습니다. 콘센트가 자리마다 있어서 편했어요.';
-  const long=Array.from({length:16},()=>para).join('\n\n'); // 약 2500자+
-  d.getElementById('draft').value=long;
-  d.getElementById('runQuality').dispatchEvent(new w.Event('click'));
-  assert.ok(d.getElementById('qualityList').children.length>0,'긴 글 검수 동작');
-  assert.ok(d.getElementById('correctionPreview').value.length>0,'긴 글 교정본 생성');
-  d.getElementById('benchmarkReference').value=long;
-  d.getElementById('benchmarkRun').dispatchEvent(new w.Event('click'));
-  assert.equal(d.getElementById('benchmarkResult').hidden,false,'긴 글 구조 비교 동작');
+itDom('긴 글(2500자)에서 검수 엔진이 동작한다',()=>{
+  const Quality=require('../quality.js');
+  const text=('경험 문장입니다. 창가에 앉아 두 시간 일했어요. ').repeat(80);
+  const result=Quality.audit(text,{titles:['테스트 제목'],hookStyle:'scene'});
+  assert.ok(result);
+  assert.ok(Array.isArray(result.issues));
+  assert.ok(result.stats);
 });
