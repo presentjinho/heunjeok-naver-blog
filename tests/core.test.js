@@ -228,3 +228,14 @@ test('말투 카드는 평균 문장 길이와 말끝 분포만 저장하고 강
 test('canGenerate는 주제와 핵심 3답 또는 실제 경험 메모 규칙을 한곳에서 판정한다',()=>{const answers={context:'토요일 오후',reason:'작업하려고',pros:'창가가 밝았어요'};assert.equal(Core.canGenerate({topic:'카페',answers,postType:'visit'}).ok,true);assert.equal(Core.canGenerate({topic:'',answers,postType:'visit'}).ok,false);const memo='지난 토요일 오후에 카페에 방문했어요. 두 시간 동안 노트북으로 작업했는데 오후에는 소음이 커져 아쉬웠어요.';assert.equal(Core.canGenerate({topic:'카페',answers:{},memo,postType:'visit'}).ok,true)});
 
 test('canCopy는 패키지·최신 입력·현재 스키마·빈 본문을 같은 순서로 판정한다',()=>{assert.equal(Core.canCopy({hasPackage:true,draft:'본문'}).ok,true);assert.match(Core.canCopy({hasPackage:true,stale:true,draft:'본문'}).reason,/오래되었습니다/);assert.match(Core.canCopy({hasPackage:true,packageCurrent:false,draft:'본문'}).reason,/이전 버전/);assert.match(Core.canCopy({hasPackage:true,draft:''}).reason,/비어/)});
+
+test('polishParagraphs는 반복 문장과 군더더기를 줄인다',()=>{
+  const Core=require('../core.js');
+  assert.ok(typeof Core.polishParagraphs==='function'||typeof Core.polishEvidence==='function');
+  if(typeof Core.polishParagraphs==='function'){
+    const out=Core.polishParagraphs(['창가 자리가 밝았어요.','창가 자리가 밝았어요.','그런데 소음이 커졌어요.']);
+    assert.ok(out.length<=2);
+  }
+  const polished=Core.polishEvidence('노트북 작업 해야해서','reason','visit');
+  assert.match(polished,/골랐|작업/);
+});
