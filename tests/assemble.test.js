@@ -33,4 +33,4 @@ test('뼈대는 없는 사실을 만들지 않는다는 안내를 포함한다',
   const result=build({topic:'x',postType:'daily'});
   assert.match(result.note,/사실을 만들/);
 });
-test('도입 훅은 다섯 가지 목적별 방식을 제공한다',()=>{for(const style of ['scene','question','contrast','problem','detail']){const result=build({topic:'카페 후기',postType:'visit',hookStyle:style});assert.equal(result.hook,HOOKS[style])}});
+test('도입 훅은 다섯 가지 방식마다 편집 가능한 후보 세 개를 제공한다',()=>{for(const style of ['scene','question','contrast','problem','detail']){const result=build({topic:'카페 후기',postType:'visit',hookStyle:style});assert.equal(result.hook,HOOKS[style]);assert.equal(result.hookCandidates.length,3);assert.ok(result.hookCandidates.every(candidate=>candidate.includes('[')))}});

@@ -18,7 +18,7 @@
       else{const ul=document.createElement('ul');stage.items.forEach(item=>{const li=document.createElement('li');li.textContent=item;ul.append(li)});box.append(ul)}
       host.append(box);
     });
-    const hook=document.createElement('p');hook.className='improve-status';hook.textContent='도입 힌트 · '+result.hook;host.append(hook);
+    const hook=document.createElement('div');hook.className='hook-candidates';const hookTitle=document.createElement('strong');hookTitle.textContent='도입 훅 후보';const hookHelp=document.createElement('p');hookHelp.textContent=result.hook;const hookList=document.createElement('ul');(result.hookCandidates||[]).forEach(candidate=>{const item=document.createElement('li');item.textContent=candidate;hookList.append(item)});hook.append(hookTitle,hookHelp,hookList);host.append(hook);
     host.hidden=false;
   }
   function runAssemble(){
@@ -32,10 +32,11 @@
 
   // 검수 강화
   function draftTitles(){return[...document.querySelectorAll('#titleCandidates li span')].map(el=>el.textContent.trim()).filter(Boolean)}
+  const correctionGuide={'mobile-wall':'마침표 기준으로 두 문장씩 끊고 문단 사이를 한 줄 비워보세요.','exaggeration':'평가어를 지우고 언제·어디서·무엇을 확인했는지로 바꿔보세요.','guarantee':'효과 단정 대신 내가 확인한 조건과 개인 경험 범위를 적으세요.','template':'상투적인 첫 문장을 지우고 실제 장면이나 독자 질문으로 바로 시작하세요.','ad-push':'구매 유도 문장을 빼고 필요한 사람과 맞지 않는 사람을 함께 적으세요.','experience-ratio':'보고·듣고·사용한 장면 하나와 그때 든 판단을 한 문장씩 추가하세요.','clickbait-title':'과장어를 빼고 장소·제품·경험·핵심 차이 중 두 가지를 제목에 넣으세요.','conclusion-first':'결론은 두 번째 문단으로 옮기고 첫 문단을 장면이나 질문으로 바꾸세요.'};
   function renderQuality(result){
     const host=$('qualityList');if(!host)return;host.innerHTML='';
     if(!result.issues.length){const li=document.createElement('li');li.className='is-clear';li.innerHTML='<strong>정해진 패턴에서 경고 없음</strong>정한 저품질·AI티 패턴에서는 걸리는 게 없어요. 내용의 진솔함이 관건입니다.';host.append(li)}
-    else result.issues.forEach(issue=>{const li=document.createElement('li');li.className='sev-'+issue.severity;const t=document.createElement('strong');t.textContent=issue.title;const d=document.createElement('span');d.textContent=issue.detail;li.append(t,d);if(issue.snippet){const c=document.createElement('code');c.textContent=issue.snippet;li.append(c)}host.append(li)});
+    else result.issues.forEach(issue=>{const li=document.createElement('li');li.className='sev-'+issue.severity;const t=document.createElement('strong');t.textContent=issue.title;const d=document.createElement('span');d.textContent=issue.detail;li.append(t,d);if(issue.snippet){const c=document.createElement('code');c.textContent=issue.snippet;li.append(c)}const guide=correctionGuide[issue.code];if(guide){const action=document.createElement('em');action.className='correction-action';action.textContent='고치는 법 · '+guide;li.append(action)}host.append(li)});
     const good=$('qualityGood');if(good)good.textContent=result.goodSignals.length?'잘된 점: '+result.goodSignals.join(' · '):'';
     const stats=$('qualityStats');if(stats)stats.textContent=`문단 ${result.stats.paragraphs} · 경험문장 ${result.stats.experientialSentences}/${result.stats.totalSentences} · 글자벽 ${result.stats.longWalls}`;
     const wrap=$('qualityResult');if(wrap)wrap.hidden=false;

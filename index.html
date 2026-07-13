@@ -49,13 +49,6 @@
       <a href="#topicSection"><span>01</span>주제</a><a href="#tone-tool"><span>02</span>말투</a><a href="#experience-tool"><span>03</span>경험</a><a href="#hook-tool"><span>04</span>훅·구성</a><a href="#quality-tool"><span>05</span>교정</a><a href="#live-research"><span>06</span>실시간 탐색</a><a href="#publish-tool"><span>07</span>발행 준비</a>
     </nav>
 
-    <ol class="steps" aria-label="글 준비 단계">
-      <li class="is-current" aria-current="step"><span>1</span> 주제 고르기</li>
-      <li><span>2</span> 말투 <small>선택</small></li>
-      <li><span>3</span> 경험 답하기</li>
-      <li><span>4</span> 검수·복사</li>
-    </ol>
-
     <section id="topicSection" class="topic-section" aria-labelledby="topic-title" tabindex="-1">
       <div class="section-heading">
         <div>
@@ -77,12 +70,12 @@
       <div id="topicList" class="topic-grid"></div>
       <div class="custom-topic"><label for="customTopic">직접 정한 주제가 있나요?</label><div><input id="customTopic" placeholder="예: 성수동 노트북 작업 카페 방문 기록"><button id="useCustomTopic" class="secondary" type="button">이 주제 사용</button></div></div>
       <p id="selectedTopicStatus" class="selected-status" role="status">주제를 하나 골라주세요.</p>
-      <div class="trend-panel" aria-labelledby="trend-title">
+      <div class="trend-panel" aria-labelledby="trend-title" hidden>
         <div><strong id="trend-title">네이버 검색 관심도</strong><p>실제 검색 횟수가 아니라 최근 12주 중 최고점을 100으로 둔 상대값입니다.</p></div>
         <button id="loadTrend" class="secondary" type="button">상대 추세 확인</button>
         <div id="trendResult" class="trend-result" aria-live="polite" hidden><p id="trendMeta"></p><ol id="trendPoints"></ol></div>
       </div>
-      <div class="keyword-panel" aria-labelledby="keyword-title">
+      <div class="keyword-panel" aria-labelledby="keyword-title" hidden>
         <div><strong id="keyword-title">월간 검색 참고값</strong><p id="keywordStatus">운영자가 네이버 검색광고 API 약관과 사용 범위를 확인한 뒤 단계적으로 제공합니다.</p></div>
         <button id="loadKeywords" class="secondary" type="button" hidden>연관 검색어 확인</button>
         <div id="keywordResult" class="keyword-result" aria-live="polite" hidden>
