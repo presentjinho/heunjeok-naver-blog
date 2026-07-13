@@ -17,7 +17,10 @@
   };
   const HOOKS={
     scene:'장면으로 시작: 그 순간 보이거나 들린 것 한 가지를 먼저 적어보세요. (결론 요약으로 시작하지 않기)',
-    question:'질문으로 시작: 독자가 검색하며 떠올릴 궁금증 한 줄로 열어보세요.'
+    question:'질문으로 시작: 독자가 검색하며 떠올릴 궁금증 한 줄로 열어보세요.',
+    contrast:'기대와 실제 차이로 시작: 가기 전 예상과 직접 겪은 차이를 한 문장씩 대비하세요.',
+    problem:'불편했던 문제로 시작: 해결하려고 했던 불편을 구체적인 상황과 함께 먼저 적으세요.',
+    detail:'구체적인 한 장면으로 시작: 시간·장소·소리·표정 중 확인한 두 가지를 짧게 묘사하세요.'
   };
   function typeOf(postType){return READER_QUESTIONS[postType]?postType:'visit'}
   function cleanLine(value,max=200){return typeof value==='string'?value.replace(/\s+/g,' ').trim().slice(0,max):''}
@@ -36,7 +39,7 @@
     const type=typeOf(postType);
     return{
       postType:type,
-      hook:HOOKS[hookStyle==='question'?'question':'scene'],
+      hook:HOOKS[hookStyle]||HOOKS.scene,
       stages:[
         {step:1,name:'독자 질문',items:stageReaderQuestions(type)},
         {step:2,name:'H2 목차',items:stageOutline(topic,type)},

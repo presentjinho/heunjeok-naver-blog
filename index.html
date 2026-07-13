@@ -45,6 +45,10 @@
       <p class="hero-copy">짧은 경험 질문에 답하면 내 문장을 중심으로 초안을 엮고, 틀에 박힌 표현과 빠진 확인 항목을 따로 보여줍니다.</p>
     </section>
 
+    <nav class="tool-nav" aria-label="원하는 기능 바로가기">
+      <a href="#topicSection"><span>01</span>주제</a><a href="#tone-tool"><span>02</span>말투</a><a href="#experience-tool"><span>03</span>경험</a><a href="#hook-tool"><span>04</span>훅·구성</a><a href="#quality-tool"><span>05</span>교정</a><a href="#live-research"><span>06</span>실시간 탐색</a><a href="#publish-tool"><span>07</span>발행 준비</a>
+    </nav>
+
     <ol class="steps" aria-label="글 준비 단계">
       <li class="is-current" aria-current="step"><span>1</span> 주제 고르기</li>
       <li><span>2</span> 말투 <small>선택</small></li>
@@ -91,7 +95,7 @@
 
     <section id="workspace" class="workspace" aria-label="네이버 블로그 글 준비 작업실">
       <div class="input-column">
-        <section class="work-card" aria-labelledby="tone-title">
+        <section id="tone-tool" class="work-card" aria-labelledby="tone-title">
           <div class="card-heading"><span>02</span><div><h2 id="tone-title">내 문장 습관 <small>선택</small></h2><p>문단 호흡·연결어는 구성에 참고하고 말끝 차이는 결과에서 알려드려요. 기존 글 원문은 저장하지 않습니다.</p></div></div>
           <label for="toneSamples">내가 쓴 기존 글 <small>최소 30자</small></label>
           <textarea id="toneSamples" rows="6" placeholder="기존 네이버 블로그 글을 30자 이상 붙여넣어 주세요." aria-describedby="toneHelp toneError"></textarea>
@@ -106,7 +110,7 @@
           <div id="toneProfile" class="tone-profile" aria-live="polite"><p>아직 등록된 말투가 없습니다. 기본 말투로도 글을 만들 수 있어요.</p></div>
         </section>
 
-        <section class="work-card" aria-labelledby="memo-title">
+        <section id="experience-tool" class="work-card" aria-labelledby="memo-title">
           <div class="card-heading"><span>03</span><div><h2 id="memo-title">빠른 경험 취재함</h2><p>몇 가지 질문에 답하면 확인한 사실만으로 네이버 초안을 구성합니다.</p></div></div>
 
           <label for="postType">어떤 글인가요?</label>
@@ -207,7 +211,7 @@
             <div class="inline-action"><input id="experienceBoost" placeholder="예: 20분 머물러 보니 콘센트가 있는 안쪽 자리가 더 편했어요."><button id="applyExperience" class="secondary" type="button">반영하기</button></div>
           </section>
 
-          <fieldset class="result-section checklist">
+          <fieldset id="publish-tool" class="result-section checklist">
             <legend>발행 전 확인</legend>
             <label><input type="checkbox" name="publishCheck"> 제목과 본문이 같은 내용을 말해요</label>
             <label><input type="checkbox" name="publishCheck"> 가격·시간·주소·수치를 다시 확인했어요</label>
@@ -238,35 +242,47 @@
       <div class="comment-workspace"><div><label for="commentInput">받은 댓글</label><textarea id="commentInput" rows="4" placeholder="답변할 댓글을 붙여넣어 주세요."></textarea><button id="makeReplies" class="primary" type="button">답변 후보 만들기</button></div><div id="replyArea" hidden><h3>답변 후보</h3><ul id="replyList" class="reply-list"></ul></div></div>
     </section>
 
+    <section id="live-research" class="comment-helper live-research" aria-labelledby="live-research-title">
+      <div class="comment-intro"><p class="section-number">실시간 글 탐색</p><h2 id="live-research-title">분야별 최신 글을 네이버에서 바로 살펴봐요.</h2><p>네이버는 외부 서비스에 게시글 조회수 순위를 제공하지 않습니다. 아래 링크는 조회수 상위 3개가 아니라 현재 검색 결과를 새 창에서 여는 기능입니다. 참고할 글은 직접 고르고 문장 대신 구조만 비교하세요.</p></div>
+      <div class="live-category-grid">
+        <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EB%A7%9B%EC%A7%91+%EB%B0%A9%EB%AC%B8+%ED%9B%84%EA%B8%B0&amp;sort=date" target="_blank" rel="noopener noreferrer"><b>맛집·지역</b><span>최신 방문 후기 보기</span></a>
+        <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EC%97%AC%ED%96%89+%ED%9B%84%EA%B8%B0&amp;sort=date" target="_blank" rel="noopener noreferrer"><b>여행</b><span>최신 여행 글 보기</span></a>
+        <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EB%B7%B0%ED%8B%B0+%EC%82%AC%EC%9A%A9+%ED%9B%84%EA%B8%B0&amp;sort=date" target="_blank" rel="noopener noreferrer"><b>뷰티</b><span>최신 사용 후기 보기</span></a>
+        <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EC%9C%A1%EC%95%84+%EA%B2%BD%ED%97%98&amp;sort=date" target="_blank" rel="noopener noreferrer"><b>육아</b><span>최신 경험 글 보기</span></a>
+        <a href="https://search.naver.com/search.naver?where=blog&amp;query=IT+%EC%A0%9C%ED%92%88+%EB%A6%AC%EB%B7%B0&amp;sort=date" target="_blank" rel="noopener noreferrer"><b>IT·제품</b><span>최신 리뷰 보기</span></a>
+        <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EC%83%9D%ED%99%9C+%EA%BF%80%ED%8C%81&amp;sort=date" target="_blank" rel="noopener noreferrer"><b>생활·취미</b><span>최신 정보 글 보기</span></a>
+      </div>
+      <p class="live-disclosure">실시간 검색 링크 · 조회수 수집 없음 · 순위 보장 없음 · 외부 글 원문 저장 없음</p>
+    </section>
+
     <section class="comment-helper" aria-labelledby="benchmark-title">
       <div class="comment-intro"><p class="section-number">인기 글 구조 비교</p><h2 id="benchmark-title">잘 나온 글과 내 초안의 구조를 맞춰봐요.</h2><p>기준으로 삼을 글(내가 쓴 인기 글 등 사용할 권리가 있는 글)을 붙여넣으면 분량·문단·소제목·질문·마무리 유도 같은 구조를 내 초안과 대조합니다. 기준 글 원문은 저장·전송하지 않고 지표만 계산하며, 남의 글을 그대로 옮겨오는 기능이 아닙니다.</p></div>
       <div class="benchmark-workspace">
         <label for="benchmarkReference">기준 글 붙여넣기 <small>최소 40자</small></label>
         <textarea id="benchmarkReference" rows="6" placeholder="조회수가 잘 나온 글을 붙여넣어 주세요. 원문은 저장하지 않습니다."></textarea>
-        <div class="action-row stack-mobile"><button id="benchmarkRun" class="primary" type="button">내 초안과 구조 비교</button><button id="benchmarkCoach" class="secondary" type="button" hidden>AI 개선 코칭</button></div>
+        <div class="action-row stack-mobile"><button id="benchmarkRun" class="primary" type="button">내 초안과 구조 비교</button></div>
         <p id="benchmarkStatus" class="benchmark-status" role="status"></p>
         <div id="benchmarkResult" class="benchmark-result" hidden>
           <div class="benchmark-score"><strong id="benchmarkScore">0%</strong><span>구조 유사도(참고용) · 실제 조회수를 예측하지 않아요</span></div>
           <ul id="benchmarkGaps" class="benchmark-gaps"></ul>
           <ul id="benchmarkStrengths" class="benchmark-strengths"></ul>
-          <div id="benchmarkCoaching" class="benchmark-coaching" hidden></div>
         </div>
       </div>
     </section>
 
-    <section class="comment-helper" aria-labelledby="assemble-title">
+    <section id="hook-tool" class="comment-helper" aria-labelledby="assemble-title">
       <div class="comment-intro"><p class="section-number">단계형 조립</p><h2 id="assemble-title">통짜로 쓰지 말고 4단계로 쌓아요.</h2><p>독자 질문 → H2 목차 → 소제목별 문단 → 편집자 검수 순서로 뼈대를 만듭니다. 각 소제목에 내 경험만 채우면 산으로 가지 않아요. 없는 사실은 만들지 않습니다.</p></div>
       <div class="improve-grid">
         <div class="improve-controls">
           <button id="runAssemble" class="primary" type="button">4단계 뼈대 만들기</button>
-          <label class="improve-hook" for="improveHook">도입 방식<select id="improveHook"><option value="scene">장면으로 시작</option><option value="question">질문으로 시작</option></select></label>
+          <label class="improve-hook" for="improveHook">도입 방식<select id="improveHook"><option value="scene">장면으로 시작</option><option value="question">질문으로 시작</option><option value="contrast">기대와 실제 차이</option><option value="problem">불편했던 문제</option><option value="detail">구체적인 한 장면</option></select></label>
         </div>
         <p id="assembleStatus" class="improve-status" role="status"></p>
         <div id="assembleResult" class="assemble-result" aria-live="polite" hidden></div>
       </div>
     </section>
 
-    <section class="comment-helper" aria-labelledby="quality-title">
+    <section id="quality-tool" class="comment-helper" aria-labelledby="quality-title">
       <div class="comment-intro"><p class="section-number">저품질·AI티 검수</p><h2 id="quality-title">발행 전, 저품질로 읽힐 요소를 잡아요.</h2><p>점수가 아니라 고칠 항목만 보여줍니다. 경험 문장 비율, 과장·보장 표현, 복붙 템플릿 냄새, 모바일 글자벽, 낚시 제목을 점검해요. 노출·순위는 판정하지 않습니다.</p></div>
       <div class="improve-grid">
         <button id="runQuality" class="primary" type="button">본문 검수하기</button>

@@ -5,7 +5,7 @@
   function currentTopic(){const custom=$('customTopic');if(custom&&custom.value.trim())return custom.value.trim();const status=$('selectedTopicStatus');if(status){const match=status.textContent.match(/주제:\s*(.+)$/);if(match)return match[1].trim()}return''}
   function currentPostType(){const el=$('postType');return el?el.value:'visit'}
   function currentExperience(){const answers={};document.querySelectorAll('[data-experience-key]').forEach(el=>{const value=String(el.value||'').trim();if(value)answers[el.dataset.experienceKey]=value});return answers}
-  function hookStyle(){const el=$('improveHook');return el&&el.value==='question'?'question':'scene'}
+  function hookStyle(){const el=$('improveHook');return el&&['scene','question','contrast','problem','detail'].includes(el.value)?el.value:'scene'}
 
   // 4단계 조립
   function renderAssemble(result){

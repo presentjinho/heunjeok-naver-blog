@@ -1,5 +1,5 @@
 const test=require('node:test');const assert=require('node:assert/strict');
-const {build,stageReaderQuestions,stageOutline,stageSections}=require('../assemble');
+const {build,stageReaderQuestions,stageOutline,stageSections,HOOKS}=require('../assemble');
 
 test('4단계를 순서대로 생성한다',()=>{
   const result=build({topic:'성수동 카페',postType:'visit'});
@@ -33,3 +33,4 @@ test('뼈대는 없는 사실을 만들지 않는다는 안내를 포함한다',
   const result=build({topic:'x',postType:'daily'});
   assert.match(result.note,/사실을 만들/);
 });
+test('도입 훅은 다섯 가지 목적별 방식을 제공한다',()=>{for(const style of ['scene','question','contrast','problem','detail']){const result=build({topic:'카페 후기',postType:'visit',hookStyle:style});assert.equal(result.hook,HOOKS[style])}});
