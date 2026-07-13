@@ -1,0 +1,35 @@
+const test=require('node:test');const assert=require('node:assert/strict');
+const {build,stageReaderQuestions,stageOutline,stageSections}=require('../assemble');
+
+test('4단계를 순서대로 생성한다',()=>{
+  const result=build({topic:'성수동 카페',postType:'visit'});
+  assert.equal(result.stages.length,4);
+  assert.deepEqual(result.stages.map(s=>s.step),[1,2,3,4]);
+  assert.equal(result.stages[0].items.length,5);
+  assert.ok(result.stages[1].items.every(h=>h.level==='H2'));
+});
+
+test('알 수 없는 글 종류는 기본(visit)으로 처리한다',()=>{
+  assert.equal(stageReaderQuestions('unknown').length,5);
+  assert.equal(stageOutline('주제','weird').length,5);
+});
+
+test('경험 답변이 있으면 소제목 뼈대에 넣고, 없으면 채울 슬롯을 남긴다',()=>{
+  const withAnswer=stageSections('카페','visit',{visit_time:'토요일 오후 두 시에 방문'});
+  assert.ok(withAnswer[0].skeleton.includes('토요일 오후 두 시에 방문'));
+  const empty=stageSections('카페','visit',{});
+  assert.ok(empty[0].skeleton.includes('['));
+});
+
+test('편집자 검수 단계와 도입 훅이 포함된다',()=>{
+  const scene=build({topic:'x',postType:'product',hookStyle:'scene'});
+  assert.ok(/장면/.test(scene.hook));
+  const question=build({topic:'x',postType:'product',hookStyle:'question'});
+  assert.ok(/질문/.test(question.hook));
+  assert.ok(scene.stages[3].items.length>=5);
+});
+
+test('뼈대는 없는 사실을 만들지 않는다는 안내를 포함한다',()=>{
+  const result=build({topic:'x',postType:'daily'});
+  assert.match(result.note,/사실을 만들/);
+});

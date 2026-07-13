@@ -78,6 +78,18 @@ npm test
 
 ## 다음 단계
 
+## 무료 공개 미리보기 배포
+
+GitHub Pages는 서버 API·비밀키·OAuth 콜백을 실행할 수 없어 전체 기능 배포에는 사용하지 않습니다. 저장소의 `render.yaml`은 Render 무료 웹 서비스에서 Docker 컨테이너 하나를 만들고 `SESSION_SECRET`을 자동 생성합니다. 무료 서비스는 유휴 상태에서 잠들며 첫 접속이 늦을 수 있으므로 MVP 공개 시험용입니다.
+
+1. Render에서 **New Blueprint**를 선택하고 이 GitHub 저장소를 연결합니다.
+2. 배포가 끝나면 `https://서비스이름.onrender.com/healthz`가 `{"status":"ok"}`를 반환하는지 확인합니다.
+3. 네이버 개발자 센터에 서비스 URL과 `https://서비스이름.onrender.com/api/v1/auth/naver/callback`을 등록합니다.
+4. Render의 Secret 환경변수에 `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`, `NAVER_REDIRECT_URI`를 입력합니다.
+5. AI 기능을 켤 때만 `OPENAI_API_KEY`를 추가합니다. 검색광고 기능은 약관을 확인한 뒤 별도 자격 증명과 `SEARCHAD_ENABLED=true`를 설정합니다.
+
+Secret 값은 `render.yaml`, `.env`, GitHub 코드·이슈·Actions 로그에 붙여넣지 않습니다. 무료 배포에서 선택형 외부 API 비용은 별도이며, 키가 없으면 로컬 초안 기능만 안전하게 유지됩니다.
+
 전체 계획: [ROADMAP.md](./ROADMAP.md)  
 GitHub·상용 제품 비교: [COMPETITIVE_RESEARCH.md](./COMPETITIVE_RESEARCH.md)  
 보류 중인 UI 세부 개선: [개선사항_체크리스트.md](./개선사항_체크리스트.md)

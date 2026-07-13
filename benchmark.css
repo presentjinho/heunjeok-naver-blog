@@ -1,0 +1,19 @@
+.benchmark-workspace{display:grid;gap:10px}
+.benchmark-workspace>label{font-weight:700;font-size:13px}
+.benchmark-status{margin:0;color:var(--muted);font-size:12px}
+.benchmark-result{margin-top:6px;display:grid;gap:14px}
+.benchmark-score{display:flex;align-items:baseline;gap:10px;padding:12px 14px;background:var(--soft);border-radius:12px}
+.benchmark-score strong{font:700 30px "Gowun Batang",serif;color:var(--navy-2)}
+.benchmark-score span{color:var(--muted);font-size:12px}
+.benchmark-gaps,.benchmark-strengths{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.benchmark-gaps li{padding:11px 13px;border-left:3px solid #d98a3d;background:#fff6ec;border-radius:9px;font-size:13px}
+.benchmark-gaps li strong{display:block;margin-bottom:3px;color:var(--warning)}
+.benchmark-gaps li span{color:var(--muted)}
+.benchmark-gaps li b{color:var(--navy-2);font-weight:700}
+.benchmark-strengths li{padding:9px 12px;border-left:3px solid var(--naver);background:var(--soft);border-radius:9px;font-size:13px;color:var(--muted)}
+.benchmark-coaching{display:grid;gap:8px;padding-top:6px;border-top:1px solid var(--line)}
+.benchmark-coaching h4{margin:0;font:700 15px "Gowun Batang",serif}
+.benchmark-coaching .coach-overall{margin:0;font-size:13px;color:var(--text)}
+.benchmark-coaching ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.benchmark-coaching li{padding:10px 12px;background:#f5f8f5;border-radius:9px;font-size:13px}
+.benchmark-coaching li strong{display:block;margin-bottom:2px;color:var(--navy)}

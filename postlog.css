@@ -1,0 +1,20 @@
+.postlog-form{display:grid;gap:10px;margin-bottom:14px}
+.postlog-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.postlog-form label{font-weight:700;font-size:13px;display:grid;gap:5px}
+.postlog-summary{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.postlog-summary span{background:var(--soft);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700;color:var(--navy)}
+.postlog-followup{margin:0 0 12px;padding:11px 13px;border-left:3px solid #d98a3d;background:#fff6ec;border-radius:9px;font-size:13px;color:var(--warning)}
+.postlog-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.postlog-item{border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:var(--sheet)}
+.postlog-item.is-due{border-color:#e4ad8b;background:#fffaf3}
+.postlog-item-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.postlog-item-head strong{font:700 15px "Gowun Batang",serif}
+.postlog-item-head .postlog-role{background:var(--navy);color:#fff;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700;flex:0 0 auto}
+.postlog-meta{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.postlog-keywords{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0 0}
+.postlog-keywords span{border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted)}
+.postlog-metrics{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:9px;font-size:12px}
+.postlog-metrics input{width:96px}
+.postlog-metrics .postlog-recorded{color:#15683f;font-weight:700}
+.postlog-item .postlog-remove{margin-left:auto}
+@media(max-width:620px){.postlog-row{grid-template-columns:1fr}}

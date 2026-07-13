@@ -1,0 +1,23 @@
+.improve-grid{display:grid;gap:12px}
+.improve-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.improve-hook{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--muted)}
+.improve-hook select{width:auto;min-width:120px}
+.improve-status{margin:0;color:var(--muted);font-size:12px}
+.assemble-result{display:grid;gap:14px;margin-top:4px}
+.assemble-stage{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--sheet)}
+.assemble-stage h4{margin:0 0 8px;font:700 15px "Gowun Batang",serif}
+.assemble-stage h4 span{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:7px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;vertical-align:middle}
+.assemble-stage ol,.assemble-stage ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.assemble-stage li{font-size:13px}
+.assemble-stage .section-skel{white-space:pre-wrap;background:#f5f8f5;border-radius:8px;padding:9px 11px;margin:4px 0 0;font-size:13px;color:var(--text)}
+.assemble-stage .heading-label{font-weight:700;color:var(--navy)}
+.quality-list{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}
+.quality-list li{padding:11px 13px;border-radius:9px;font-size:13px;border-left:3px solid var(--line);background:#fff}
+.quality-list li.sev-high{border-left-color:#b52c13;background:#fff0eb}
+.quality-list li.sev-medium{border-left-color:#d98a3d;background:#fff6ec}
+.quality-list li.sev-low{border-left-color:var(--muted);background:var(--soft)}
+.quality-list li.is-clear{border-left-color:var(--naver);background:var(--soft);color:var(--muted)}
+.quality-list li strong{display:block;margin-bottom:2px}
+.quality-list li code{display:block;margin-top:5px;font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 7px;overflow-wrap:anywhere}
+.quality-good{margin:8px 0 0;font-size:12px;color:var(--muted)}
+.quality-stats{margin:6px 0 0;font-size:12px;color:var(--muted)}
