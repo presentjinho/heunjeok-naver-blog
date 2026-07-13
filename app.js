@@ -11,6 +11,7 @@
   for(const name of ['loadTrend','trendResult','trendMeta','trendPoints','loadKeywords','keywordStatus','keywordResult','keywordMeta','keywordList'])els[name]=document.createElement(name.includes('Points')||name.includes('List')?'ul':name.startsWith('load')?'button':'div');
   els.draftVersion=$('#draftVersion');els.restoreVersion=$('#restoreVersion');
   els.photoFiles=$('#photoFiles');els.clearPhotos=$('#clearPhotos');els.photoVaultList=$('#photoVaultList');els.photoVaultStatus=$('#photoVaultStatus');
+  window.addEventListener('heunjeok:tone-profile',event=>{if(!event.detail)return;state.tone=event.detail;renderTone();workspaceChanged();toneInputChanged();toast('말투 카드를 전환했어요.')});
   function safeRead(key){try{return localStorage.getItem(key)}catch{return null}}
   function safeWrite(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
   function safeRemove(key){try{localStorage.removeItem(key);return true}catch{return false}}

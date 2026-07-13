@@ -13,13 +13,10 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="heunjeok-build" content="dev">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests">
   <title>흔적 — 네이버 블로그 글쓰기 작업실</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css?v=20260713-2">
   <link rel="stylesheet" href="./comments.css?v=20260713-2">
   <link rel="stylesheet" href="./a11y.css?v=20260713-2">
@@ -50,14 +47,16 @@
   <header class="site-header">
     <a class="brand" href="#top" aria-label="흔적 처음으로">흔<span>적</span></a>
     <p class="product-name">네이버 블로그 발행 준비 도우미</p>
-    <span class="local-badge">네이버 공식 서비스가 아니에요</span>
+    <span class="local-badge">공개 로컬판 · 이 브라우저에 저장</span>
+    <span id="headerBuild" class="header-build">build dev</span>
   </header>
 
   <main id="top" class="page-shell">
     <section class="hero" aria-labelledby="hero-title">
-      <p class="kicker">내가 겪은 일은 그대로, 자동으로 덧붙인 사실은 없이</p>
-      <h1 id="hero-title">오늘 쓸 주제부터<br>네이버에 옮길 글까지.</h1>
-      <p class="hero-copy">짧은 경험 질문에 답하면 내 문장을 중심으로 초안을 엮고, 틀에 박힌 표현과 빠진 확인 항목을 따로 보여줍니다.</p>
+      <p class="kicker">네이버 블로그 발행 준비 작업실</p>
+      <h1 id="hero-title">내 경험을 네이버 블로그 글로 정리해요.</h1>
+      <p class="hero-copy">주제를 고르고 실제 경험 세 칸을 적으면, 확인한 내용만으로 초안을 만들어 복사할 수 있습니다.</p>
+      <p class="hero-position">네이버 공식 서비스가 아니에요. 계정 연결이나 발행 권한 없이, 완성한 글만 복사해 네이버에서 확인합니다.</p>
     </section>
 
     <section id="topicSection" class="topic-section" aria-labelledby="topic-title" tabindex="-1">
