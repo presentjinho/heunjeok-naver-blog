@@ -1,0 +1,29 @@
+{
+  "name": "흔적 — 네이버 블로그 글쓰기 작업실",
+  "short_name": "흔적",
+  "description": "내 경험으로 네이버 블로그 초안을 만들고 검수해 복사하는 로컬 글쓰기 도구",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f5ee",
+  "theme_color": "#13352b",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "og.png",
+      "sizes": "1200x630",
+      "type": "image/png"
+    }
+  ]
+}

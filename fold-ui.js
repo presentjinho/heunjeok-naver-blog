@@ -7,11 +7,12 @@
   const style=doc.createElement('style');style.id='foldStyle';
   style.textContent=[
     '.folded-tool{border:1px solid var(--line,#c9d4cc);border-radius:14px;background:#fbfcfb;margin-top:14px}',
-    '.folded-tool>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:13px 15px}',
+    '.folded-tool>summary{list-style:none;cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:13px 15px}',
     '.folded-tool>summary::-webkit-details-marker{display:none}',
-    '.folded-tool>summary::after{content:"펼치기 ▾";margin-left:auto;color:var(--muted,#4f625a);font-size:12px;font-weight:600}',
+    '.folded-tool>summary:focus-visible{outline:2px solid var(--naver,#2f9e44);outline-offset:2px;border-radius:12px}',
+    '.folded-tool>summary::after{content:"펼치기 ▾";margin-left:auto;color:var(--muted,#4f625a);font-size:12px;font-weight:600;white-space:nowrap}',
     '.folded-tool[open]>summary::after{content:"접기 ▴"}',
-    '.folded-tool .fold-title{font:700 15px "Gowun Batang",serif;color:var(--navy-2,#0b2b22)}',
+    '.folded-tool .fold-title{font:700 15px "Gowun Batang","Gowun Dodum",serif;color:var(--navy-2,#0b2b22)}',
     '.folded-tool .fold-hint{color:var(--muted,#4f625a);font-size:12px;font-weight:500}',
     '.folded-tool .fold-body{padding:2px 15px 15px}',
     '.is-folded-section{padding:0!important;border:0!important;background:none!important;box-shadow:none!important;margin:0!important}'
@@ -20,6 +21,10 @@
 
   function fold(section,hint){
     if(!section||section.dataset.folded)return;
+    // 이중 접기 방지: 이미 다른 details(고급/탭 묶음) 안에 있으면 건너뜀
+    if(section.closest('details'))return;
+    // 이미 접힌 도구를 자식으로 품고 있으면(다른 스크립트가 감쌈) 건너뜀
+    if(section.querySelector(':scope>details.folded-tool'))return;
     section.dataset.folded='1';
     const heading=section.querySelector('h2,h3');
     const title=heading?heading.textContent.trim():'도구';

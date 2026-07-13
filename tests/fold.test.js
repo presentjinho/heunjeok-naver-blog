@@ -30,3 +30,12 @@ itDom('두 번 실행해도 중복 접힘이 없다(멱등)',()=>{
   d.defaultView.eval(src);
   assert.equal(d.querySelectorAll('details.folded-tool').length,first,'재실행해도 개수 동일');
 });
+itDom('이미 details 안에 있는 섹션은 이중으로 접지 않는다',()=>{
+  const html='<!doctype html><html><head></head><body>'+
+    '<details class="advanced-group"><summary>고급</summary>'+
+    '<section aria-labelledby="comment-title"><h2 id="comment-title">댓글 답변 틀</h2><button id="mk">만들기</button></section>'+
+    '</details></body></html>';
+  const dom=new JSDOM(html,{runScripts:'outside-only'});dom.window.eval(src);const d=dom.window.document;
+  assert.equal(d.querySelectorAll('details.folded-tool').length,0,'상위 details가 있으면 접지 않음');
+  assert.ok(d.getElementById('mk'),'원래 요소 보존');
+});
