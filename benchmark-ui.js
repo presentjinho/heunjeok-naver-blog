@@ -7,7 +7,7 @@
   if(!els.reference||!els.run||!els.draft)return;
   let last=null;
   function currentTopic(){const custom=$('customTopic');if(custom&&custom.value.trim())return custom.value.trim();const status=$('selectedTopicStatus');if(status){const match=status.textContent.match(/주제:\s*(.+)$/);if(match)return match[1].trim()}return''}
-  function setStatus(message){els.status.textContent=message||''}
+  function setStatus(message){els.status.textContent=message||'';els.status.hidden=false;const host=els.run.closest('details');if(host)host.open=true;try{els.status.scrollIntoView({block:'nearest'})}catch{}}
   function crossAction(){
     if($('benchmarkCross'))return;
     const row=document.createElement('div');row.id='benchmarkCross';row.className='improve-controls';
@@ -26,7 +26,7 @@
   function run(){
     const reference=els.reference.value.trim();const draft=els.draft.value.trim();
     if(reference.length<40){setStatus('기준 글을 40자 이상 붙여넣어 주세요.');els.reference.focus({preventScroll:true});return}
-    if(draft.length<20){setStatus('먼저 위에서 초안을 만들어 주세요. 비교할 내 본문이 필요해요.');return}
+    if(draft.length<20){setStatus('먼저 초안을 만들어 주세요. (위자드 3단계 초안 또는 「내 경험으로 초안 만들기」) 비교할 내 본문이 20자 이상 필요해요.');return}
     const result=Benchmark.compare(reference,draft,{topic:currentTopic()});
     if(!result.ok){setStatus(result.error==='reference_too_short'?'기준 글이 너무 짧아요.':'비교할 내 본문이 너무 짧아요.');return}
     last=result;setStatus('기준 글 원문은 저장하지 않았어요. 구조 지표만 대조했습니다.');render(result);

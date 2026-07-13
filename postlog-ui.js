@@ -13,7 +13,7 @@
   function firstTitle(){const el=document.querySelector('#titleCandidates li span');return el?el.textContent.trim():''}
   function fmtDate(ms){try{return new Date(ms).toLocaleDateString('ko-KR',{year:'2-digit',month:'2-digit',day:'2-digit'})}catch{return''}}
   function num(n){return typeof n==='number'?n.toLocaleString('ko-KR'):'-'}
-  function setStatus(message){if(els.status)els.status.textContent=message||''}
+  function setStatus(message){if(!els.status)return;els.status.hidden=false;els.status.textContent=message||'';els.status.setAttribute('role','status');try{els.status.scrollIntoView({block:'nearest'})}catch{}}
   function pull(){
     const topic=firstTitle()||currentTopic();
     if(els.topic&&topic)els.topic.value=topic;
@@ -51,12 +51,12 @@
     });
   }
   function add(){
-    const topic=(els.topic&&els.topic.value.trim())||currentTopic();
+    const topic=(els.topic&&els.topic.value.trim())||firstTitle()||currentTopic();
     const created=Log.createEntry({topic,role:els.role?els.role.value:'기타',keywords:els.keywords?els.keywords.value:'',url:els.url?els.url.value:'',note:els.note?els.note.value:'',postType:($('postType')&&$('postType').value)||''});
-    if(!created.ok){setStatus('발행한 글의 주제를 2자 이상 적어주세요.');if(els.topic)els.topic.focus({preventScroll:true});return}
-    if(!write(Log.addEntry(read(),created.value))){setStatus('브라우저 저장이 차단돼 기록하지 못했어요.');return}
+    if(!created.ok){const host=els.add.closest('details');if(host)host.open=true;setStatus('발행한 글의 주제를 2자 이상 적어주세요. (제목 후보나 주제를 먼저 고르면 자동으로 채워져요)');if(els.topic){els.topic.focus({preventScroll:true});els.topic.placeholder='예: 성수동 카페 방문 후기'}return}
+    if(!write(Log.addEntry(read(),created.value))){const host=els.add.closest('details');if(host)host.open=true;setStatus('브라우저 저장이 차단돼 기록하지 못했어요. 시크릿 모드인지 확인해 주세요.');return}
     if(els.topic)els.topic.value='';if(els.keywords)els.keywords.value='';if(els.url)els.url.value='';if(els.note)els.note.value='';
-    setStatus('발행 기록을 이 브라우저에만 저장했어요. 7일 뒤 성과를 직접 입력해 주세요.');render();
+    const host=els.add.closest('details');if(host)host.open=true;setStatus('발행 기록을 이 브라우저에만 저장했어요. 7일 뒤 성과를 직접 입력해 주세요.');render();
   }
   // 현재 초안 불러오기 버튼을 동적으로 추가
   const pullBtn=document.createElement('button');pullBtn.id='logPull';pullBtn.type='button';pullBtn.className='secondary';pullBtn.textContent='현재 초안 제목·태그 불러오기';pullBtn.addEventListener('click',pull);

@@ -17,9 +17,11 @@ body,button,input,textarea,select{font-family:"Apple SD Gothic Neo","Malgun Goth
 body.wizard-step-mode .wizard-step-hide{display:none!important}
 body.wizard-step-mode .wizard-step-actions{display:flex;gap:10px;justify-content:space-between;margin:0 0 18px}
 body.wizard-step-mode .wizard-step-actions .primary{min-width:42%}
-body.wizard-step-mode .advanced-tools,body.wizard-step-mode .folded-tool,body.wizard-step-mode [aria-labelledby="data-title"]{display:none}
-body.wizard-step-mode[data-wizard-step="3"] .folded-tool,body.wizard-step-mode[data-wizard-step="3"] .advanced-tools{display:block}
-body.wizard-step-mode[data-wizard-step="4"] [aria-labelledby="data-title"]{display:block}
+/* 부가 도구(구조 비교·발행 기록 등)는 위자드 단계와 무관하게 항상 노출 — 숨기면 버튼이 죽은 것처럼 보임 */
+body.wizard-step-mode [aria-labelledby="data-title"]{display:none}
+body.wizard-step-mode[data-wizard-step="4"] [aria-labelledby="data-title"],body.wizard-step-mode[data-wizard-step="3"] [aria-labelledby="data-title"]{display:block}
+body.wizard-step-mode .folded-tool,body.wizard-step-mode .advanced-tools{display:block}
+body.wizard-step-mode .wizard-tools-note{margin:8px 0 0;font-size:12px;color:#5d7065}
 .sync-banner{margin:12px 0 18px;padding:14px 16px;border:1px solid #e0c48a;border-radius:16px;background:#fff8e8;color:#6a4a12}
 .sync-banner p{margin:6px 0 10px;font-size:13px;line-height:1.55}
 .sync-banner .action-row{display:flex;gap:8px;flex-wrap:wrap}
