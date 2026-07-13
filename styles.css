@@ -27,3 +27,8 @@ textarea,input,select{border-color:#c8d2ca;border-radius:14px;background:#fffefa
 .tone-profile,.specificity,.privacy-note{border-radius:16px}.result-section{border-color:#e2e7e3}
 .live-category-grid a{border-radius:18px;background:#fffefa;box-shadow:0 5px 16px rgba(31,66,53,.05)}
 @media(max-width:620px){.topic-section,.work-card,.result-panel,.comment-helper{border-radius:20px}.hero{padding-inline:2px}.tool-nav{top:6px}}
+
+/* sticky toast visibility */
+.toast{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%) translateY(120%);z-index:90;max-width:min(520px,calc(100% - 24px));padding:12px 16px;border-radius:14px;background:#123f2c;color:#fff;font-weight:700;font-size:13px;box-shadow:0 12px 40px rgba(8,30,18,.28);opacity:0;pointer-events:none;transition:transform .2s ease,opacity .2s ease;overflow-wrap:anywhere;word-break:keep-all}
+.toast.is-visible{transform:translateX(-50%) translateY(0);opacity:1}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}

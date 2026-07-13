@@ -3,7 +3,7 @@ const html=fs.readFileSync('index.html','utf8'),js=fs.readFileSync('product-v2.j
 let JSDOM;try{JSDOM=require('jsdom').JSDOM}catch{}
 test('제품 흐름 파일을 보안 정책 안에서 로드한다',()=>{for(const file of ['backup.js','product-v2.js','product-v2.css'])assert.match(html,new RegExp(file.replace('.','\\.')));assert.doesNotMatch(js,/eval\(|new Function|document\.write/)});
 test('공개판 런타임 배지는 GitHub Pages와 서버 연결판을 구분한다',()=>{assert.match(js,/function runtimeKind/);assert.match(js,/github\\\.io/);assert.match(js,/공개 로컬판/);assert.match(js,/서버 연결판/)});
-test('단계형 위자드·모바일 3탭·고급 접기를 제공한다',()=>{assert.match(js,/class:'wizard-nav'/);assert.match(js,/class:'mobile-tabs'/);assert.match(js,/발행 후·참고 도구 더 보기/);assert.match(css,/grid-template-columns:repeat\(3,1fr\)/)});
+test('단계형 위자드·모바일 3탭·고급 접기를 제공한다',()=>{assert.match(js,/class:'wizard-nav'/);assert.match(js,/class:'mobile-tabs'/);assert.match(js,/발행 기록 더 보기/);assert.match(js,/function publishChecklist/);assert.match(css,/grid-template-columns:repeat\(3,1fr\)/)});
 test('첫 화면 문구는 JS로 덮어쓰지 않고 외부 폰트 요청도 만들지 않는다',()=>{assert.match(html,/내 경험을 네이버 블로그 글로 정리해요/);assert.doesNotMatch(js,/function position/);assert.doesNotMatch(html,/fonts\.googleapis|fonts\.gstatic/);assert.match(html,/id="headerBuild"/)});
 test('결과는 본문·점검·발행 세 탭으로 나누고 선택을 브라우저에 기억한다',()=>{assert.match(js,/function resultTabs/);for(const label of ["'본문'","'점검'","'발행'"])assert.match(js,new RegExp(label));assert.match(js,/savePrefs\(\{resultTab:name\}\)/);assert.match(css,/\.is-result-tab-hidden/)});
 test('상단 백업은 v2 백업 하나만 만들고 사진 제외를 완료 문구에 알린다',()=>{assert.match(js,/id:'quickBackup'/);assert.match(js,/stopImmediatePropagation/);assert.match(js,/사진은 포함되지 않았습니다/)});

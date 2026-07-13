@@ -1,29 +1,26 @@
 (function(){
   'use strict';
-  // 접기 패치: 부가 도구(실시간 탐색·댓글·구조 비교)를 메인에서 접힌 상태로 둔다.
-  // "경험 기록 → 검수 → 복사"가 주인공이고, 검색·비교·댓글은 secondary.
+  // 접기: 부가 도구를 메인에서 접어 "경험→초안→검수→복사"가 주인공이 되게 한다.
   if(document.getElementById('foldStyle'))return;
   const doc=document;
   const style=doc.createElement('style');style.id='foldStyle';
   style.textContent=[
-    '.folded-tool{border:1px solid var(--line,#c9d4cc);border-radius:14px;background:#fbfcfb;margin-top:14px}',
-    '.folded-tool>summary{list-style:none;cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:13px 15px}',
+    '.folded-tool{border:1px solid var(--line,#c9d4cc);border-radius:14px;background:#fbfcfb;margin-top:14px;overflow-wrap:anywhere;word-break:keep-all}',
+    '.folded-tool>summary{list-style:none;cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:13px 15px;min-height:52px}',
     '.folded-tool>summary::-webkit-details-marker{display:none}',
     '.folded-tool>summary:focus-visible{outline:2px solid var(--naver,#2f9e44);outline-offset:2px;border-radius:12px}',
     '.folded-tool>summary::after{content:"펼치기 ▾";margin-left:auto;color:var(--muted,#4f625a);font-size:12px;font-weight:600;white-space:nowrap}',
     '.folded-tool[open]>summary::after{content:"접기 ▴"}',
-    '.folded-tool .fold-title{font:700 15px "Gowun Batang","Gowun Dodum",serif;color:var(--navy-2,#0b2b22)}',
-    '.folded-tool .fold-hint{color:var(--muted,#4f625a);font-size:12px;font-weight:500}',
-    '.folded-tool .fold-body{padding:2px 15px 15px}',
+    '.folded-tool .fold-title{font:700 15px "Apple SD Gothic Neo","Malgun Gothic",system-ui,serif;color:var(--navy-2,#0b2b22);overflow-wrap:anywhere}',
+    '.folded-tool .fold-hint{flex:1 1 12rem;color:var(--muted,#4f625a);font-size:12px;font-weight:500;line-height:1.45;overflow-wrap:anywhere}',
+    '.folded-tool .fold-body{padding:2px 15px 15px;overflow-wrap:anywhere;word-break:keep-all}',
     '.is-folded-section{padding:0!important;border:0!important;background:none!important;box-shadow:none!important;margin:0!important}'
   ].join('');
   doc.head.appendChild(style);
 
   function fold(section,hint){
     if(!section||section.dataset.folded)return;
-    // 이중 접기 방지: 이미 다른 details(고급/탭 묶음) 안에 있으면 건너뜀
     if(section.closest('details'))return;
-    // 이미 접힌 도구를 자식으로 품고 있으면(다른 스크립트가 감쌈) 건너뜀
     if(section.querySelector(':scope>details.folded-tool'))return;
     section.dataset.folded='1';
     const heading=section.querySelector('h2,h3');
@@ -41,11 +38,13 @@
     section.classList.add('is-folded-section');
   }
   function pick(sel){return doc.querySelector(sel)}
-  // 순서: 마지막에 실행되도록 head에서 다른 -ui.js 뒤에 로드
   [
-    ['[aria-labelledby="live-research-title"]','참고용 · 문장 말고 구조만 보세요'],
-    ['#live-research','참고용 · 문장 말고 구조만 보세요'],
-    ['[aria-labelledby="benchmark-title"]','고급 · 내 과거 글과 구조만 비교'],
-    ['[aria-labelledby="comment-title"]','발행 후 · 필요할 때만']
+    ['[aria-labelledby="live-research-title"]','참고 · 문장 말고 구조만'],
+    ['#live-research','참고 · 문장 말고 구조만'],
+    ['[aria-labelledby="benchmark-title"]','고급 · 구조 비교'],
+    ['[aria-labelledby="comment-title"]','발행 후 · 필요할 때만'],
+    ['[aria-labelledby="assemble-title"]','선택 · 뼈대부터 쌓기'],
+    ['#hook-tool','선택 · 뼈대부터 쌓기'],
+    ['[aria-labelledby="postlog-title"]','기록 · 직접 남기는 성과']
   ].forEach(([sel,hint])=>{const s=pick(sel);if(s&&!s.dataset.folded)fold(s,hint)});
 })();
