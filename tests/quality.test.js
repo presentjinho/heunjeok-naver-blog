@@ -1,5 +1,5 @@
 const test=require('node:test');const assert=require('node:assert/strict');
-const {audit,experienceRatio}=require('../quality');
+const {audit,safeCorrect,sentenceAdvice,experienceRatio}=require('../quality');
 
 test('경험 문장 비율을 계산한다',()=>{
   const r=experienceRatio('저는 어제 직접 방문했어요. 날씨가 좋았습니다. 제가 먹어봤어요.');
@@ -34,3 +34,9 @@ test('결과에 노출·순위 보장 문구를 만들지 않는다',()=>{
   const result=audit('저는 직접 가봤어요. 좋았습니다.',{titles:['후기']});
   assert.doesNotMatch(JSON.stringify(result),/상위 노출을 보장|순위를 올려|조회수가 오릅니다/);
 });
+
+test('안전 교정본은 과장·보장·상투 문구를 줄이고 새 사실 대신 확인 자리를 남긴다',()=>{const source='오늘은 제품에 대해 알아보겠습니다. 무조건 최고의 제품이며 효과는 100% 보장합니다.';const result=safeCorrect(source);assert.equal(result.changed,true);assert.doesNotMatch(result.text,/알아보겠습니다|무조건|최고의|100% 보장/);assert.match(result.text,/직접 확인한 조건/);assert.ok(result.changes.length>=3)});
+
+test('문장별 조언은 문제 문장과 원인을 연결한다',()=>{const result=sentenceAdvice('무조건 최고입니다. 저는 직접 써봤어요. 구매 링크 클릭.');assert.ok(result.some(item=>item.flags.includes('과장')));assert.ok(result.some(item=>item.flags.includes('홍보 압박')));assert.ok(result.every(item=>item.text&&item.advice))});
+
+test('긴 문단 교정은 두 문장 단위로 나누되 문장을 만들지 않는다',()=>{const source='첫 문장입니다. 두 번째 문장입니다. 세 번째 문장입니다. 네 번째 문장입니다.';const result=safeCorrect(source);assert.match(result.text,/두 번째 문장입니다\.\n\n세 번째/);for(const sentence of ['첫 문장입니다.','두 번째 문장입니다.','세 번째 문장입니다.','네 번째 문장입니다.'])assert.match(result.text,new RegExp(sentence.replace('.','\\.')))});

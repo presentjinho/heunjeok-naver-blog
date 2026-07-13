@@ -39,6 +39,7 @@
     else result.issues.forEach(issue=>{const li=document.createElement('li');li.className='sev-'+issue.severity;const t=document.createElement('strong');t.textContent=issue.title;const d=document.createElement('span');d.textContent=issue.detail;li.append(t,d);if(issue.snippet){const c=document.createElement('code');c.textContent=issue.snippet;li.append(c)}const guide=correctionGuide[issue.code];if(guide){const action=document.createElement('em');action.className='correction-action';action.textContent='고치는 법 · '+guide;li.append(action)}host.append(li)});
     const good=$('qualityGood');if(good)good.textContent=result.goodSignals.length?'잘된 점: '+result.goodSignals.join(' · '):'';
     const stats=$('qualityStats');if(stats)stats.textContent=`문단 ${result.stats.paragraphs} · 경험문장 ${result.stats.experientialSentences}/${result.stats.totalSentences} · 글자벽 ${result.stats.longWalls}`;
+    const advice=$('correctionAdvice');const count=$('correctionCount');if(advice){advice.innerHTML='';(result.sentenceAdvice||[]).forEach(item=>{const li=document.createElement('li');const before=document.createElement('q');before.textContent=item.text;const tip=document.createElement('span');tip.textContent=item.advice;li.append(before,tip);advice.append(li)});if(!(result.sentenceAdvice||[]).length){const li=document.createElement('li');li.textContent='문장별 경고가 없습니다. 사실·가격·최신 정보는 직접 확인해 주세요.';advice.append(li)}}if(count)count.textContent=(result.sentenceAdvice||[]).length+'개';const preview=$('correctionPreview');if(preview)preview.value=result.correction?.text||'';
     const wrap=$('qualityResult');if(wrap)wrap.hidden=false;
   }
   function runQuality(){
@@ -51,4 +52,6 @@
 
   const assembleBtn=$('runAssemble');if(assembleBtn&&Assemble)assembleBtn.addEventListener('click',runAssemble);
   const qualityBtn=$('runQuality');if(qualityBtn&&Quality)qualityBtn.addEventListener('click',runQuality);
+  const applyBtn=$('applyCorrection');if(applyBtn)applyBtn.addEventListener('click',()=>{const draft=$('draft');const preview=$('correctionPreview');if(!draft||!preview||!preview.value.trim())return;if(!confirm('현재 초안을 안전 교정본으로 바꿀까요? 적용 뒤에도 대괄호와 사실을 직접 확인해야 합니다.'))return;draft.value=preview.value;draft.dispatchEvent(new Event('input',{bubbles:true}));const status=$('qualityStatus');if(status)status.textContent='교정본을 초안에 적용했어요. 대괄호와 사실을 확인한 뒤 다시 검수하세요.';draft.scrollIntoView({behavior:'smooth',block:'center'})});
+  const copyBtn=$('copyCorrection');if(copyBtn)copyBtn.addEventListener('click',async()=>{const preview=$('correctionPreview');const status=$('qualityStatus');if(!preview||!preview.value.trim())return;try{await navigator.clipboard.writeText(preview.value);if(status)status.textContent='교정본을 복사했어요. 대괄호와 사실을 확인해 주세요.'}catch{preview.focus();preview.select();if(status)status.textContent='자동 복사가 막혔어요. 선택된 교정본을 직접 복사해 주세요.'}});
 })();
