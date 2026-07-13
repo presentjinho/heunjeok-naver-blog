@@ -27,3 +27,13 @@
 .hook-candidates .hook-pick{display:block;width:100%;text-align:left;background:#fff;border:1px solid #cfe0d3;border-radius:10px;padding:9px 11px;font:inherit;font-size:13px;line-height:1.6;color:var(--text);cursor:pointer}
 .hook-candidates .hook-pick:hover{border-color:var(--naver);background:var(--soft)}
 #assembleResult .improve-controls,#qualityCross,#benchmarkCross{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+
+.length-meter{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:8px}
+.length-meter .length-count{font-weight:800;font-size:13px;color:var(--navy-2)}
+.length-meter select{width:auto;min-width:110px;font-size:13px}
+.length-meter .length-bar{flex:1 1 120px;height:8px;border-radius:999px;background:var(--soft);overflow:hidden}
+.length-meter .length-bar i{display:block;height:100%;width:0;background:var(--line);transition:width .25s ease}
+.length-meter[data-state="low"] .length-bar i{background:#d98a3d}
+.length-meter[data-state="near"] .length-bar i{background:var(--naver)}
+.length-meter[data-state="done"] .length-bar i{background:var(--naver-bright)}
+.length-meter .length-hint{flex-basis:100%;color:var(--muted);font-size:12px}

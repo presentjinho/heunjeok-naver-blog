@@ -26,12 +26,13 @@
   function cleanLine(value,max=200){return typeof value==='string'?value.replace(/\s+/g,' ').trim().slice(0,max):''}
   function stageReaderQuestions(postType){return READER_QUESTIONS[typeOf(postType)].slice()}
   function stageOutline(topic,postType){const title=cleanLine(topic,60)||'이 글';return OUTLINE[typeOf(postType)].map((heading,index)=>({level:'H2',order:index+1,heading}))}
-  function stageSections(topic,postType,experienceFields={}){
+  function stageSections(topic,postType,experienceFields={},recChars=0){
     const answers=experienceFields&&typeof experienceFields==='object'?experienceFields:{};
     const values=Object.values(answers).map(value=>cleanLine(value,200)).filter(Boolean);
+    const rec=recChars>0?` (권장 약 ${recChars}자)`:'';
     return stageOutline(topic,postType).map((section,index)=>{
       const seed=values[index]||'';
-      return{heading:section.heading,skeleton:seed?`${seed}\n(위 경험을 2~3문장으로 풀고, 없는 사실은 넣지 마세요.)`:'[여기에 이 소제목에 해당하는 내 경험을 2~3문장으로 적어주세요]'};
+      return{heading:section.heading,recChars:recChars>0?recChars:null,skeleton:seed?`${seed}\n(위 경험을 2~3문장으로 풀고, 없는 사실은 넣지 마세요.)${rec}`:`[여기에 이 소제목에 해당하는 내 경험을 2~3문장으로 적어주세요]${rec}`};
     });
   }
   function stageEditorChecklist(){return['소제목마다 내 경험 문장이 최소 1개 있는가','과장·보장 표현을 뺐는가','도입이 결론 요약이 아니라 장면·질문인가','문단이 모바일에서 2~3줄인가','복붙 템플릿 문구(알아보겠습니다·총정리 등)를 지웠는가','광고·협찬 관계를 표시했는가'];}
@@ -40,20 +41,25 @@
     if(!result||!Array.isArray(result.stages))return '';
     const sections=(result.stages.find(s=>s.step===3)||{}).items||[];
     if(!sections.length)return '';
-    const lines=['# 4단계 뼈대 (소제목별로 내 경험만 채우기)'];
-    sections.forEach(section=>{lines.push('');lines.push('■ '+section.heading);lines.push('[여기에 이 소제목에 해당하는 내 경험을 2~3문장으로 적어주세요]')});
+    const target=result.targetChars?` · 목표 약 ${result.targetChars}자`:'';
+    const lines=['# 4단계 뼈대 (소제목별로 내 경험만 채우기)'+target];
+    sections.forEach(section=>{const rec=section.recChars?` (권장 약 ${section.recChars}자)`:'';lines.push('');lines.push('■ '+section.heading);lines.push(`[여기에 이 소제목에 해당하는 내 경험을 2~3문장으로 적어주세요]${rec}`)});
     return lines.join('\n');
   }
-  function build({topic,postType,experienceFields,hookStyle}={}){
+  function build({topic,postType,experienceFields,hookStyle,targetChars}={}){
     const type=typeOf(postType);
+    const target=[1500,2000,3000].includes(Number(targetChars))?Number(targetChars):0;
+    const perSection=target?Math.round(target/5/50)*50:0;
     return{
       postType:type,
+      targetChars:target||null,
+      perSection:perSection||null,
       hook:HOOKS[hookStyle]||HOOKS.scene,
       hookCandidates:hookCandidates(topic,HOOKS[hookStyle]?hookStyle:'scene'),
       stages:[
         {step:1,name:'독자 질문',items:stageReaderQuestions(type)},
         {step:2,name:'H2 목차',items:stageOutline(topic,type)},
-        {step:3,name:'소제목별 문단',items:stageSections(topic,type,experienceFields)},
+        {step:3,name:'소제목별 문단',items:stageSections(topic,type,experienceFields,perSection)},
         {step:4,name:'편집자 검수',items:stageEditorChecklist()}
       ],
       note:'각 문단의 대괄호 슬롯을 내 경험으로 채우세요. 이 뼈대는 사실을 만들어내지 않습니다.'

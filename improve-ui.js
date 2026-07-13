@@ -36,7 +36,7 @@
   function runAssemble(){
     if(!Assemble)return;const topic=currentTopic();
     if(!topic){setAssembleStatus('먼저 위에서 주제를 골라주세요.');return}
-    renderAssemble(Assemble.build({topic,postType:currentPostType(),experienceFields:currentExperience(),hookStyle:hookStyle()}));
+    renderAssemble(Assemble.build({topic,postType:currentPostType(),experienceFields:currentExperience(),hookStyle:hookStyle(),targetChars:lengthTarget()}));
     setAssembleStatus('통짜로 쓰지 말고 이 순서대로 채워보세요. 각 소제목에 내 경험을 넣으면 됩니다.');
   }
 
@@ -72,4 +72,21 @@
   const qualityBtn=$('runQuality');if(qualityBtn&&Quality)qualityBtn.addEventListener('click',runQuality);
   const applyBtn=$('applyCorrection');if(applyBtn)applyBtn.addEventListener('click',()=>{const draft=$('draft');const preview=$('correctionPreview');if(!draft||!preview||!preview.value.trim())return;if(!confirm('현재 초안을 안전 교정본으로 바꿀까요? 적용 뒤에도 대괄호와 사실을 직접 확인해야 합니다.'))return;draft.value=preview.value;draft.dispatchEvent(new Event('input',{bubbles:true}));const status=$('qualityStatus');if(status)status.textContent='교정본을 초안에 적용했어요. 대괄호와 사실을 확인한 뒤 다시 검수하세요.';draft.scrollIntoView({behavior:'smooth',block:'center'})});
   const copyBtn=$('copyCorrection');if(copyBtn)copyBtn.addEventListener('click',async()=>{const preview=$('correctionPreview');const status=$('qualityStatus');if(!preview||!preview.value.trim())return;try{await navigator.clipboard.writeText(preview.value);if(status)status.textContent='교정본을 복사했어요. 대괄호와 사실을 확인해 주세요.'}catch{preview.focus();preview.select();if(status)status.textContent='자동 복사가 막혔어요. 선택된 교정본을 직접 복사해 주세요.'}});
+
+  // ── 분량 미터 (2000·3000자 긴 글 지원) ──
+  const LENGTH_KEY='heunjeok-length-target';
+  function lengthTarget(){const v=parseInt(localStorage.getItem(LENGTH_KEY),10);return [1500,2000,3000].includes(v)?v:2000}
+  function setupLengthMeter(){
+    const draft=$('draft');if(!draft||$('lengthMeter'))return;
+    const wrap=document.createElement('div');wrap.id='lengthMeter';wrap.className='length-meter';
+    const count=document.createElement('strong');count.className='length-count';
+    const sel=document.createElement('select');sel.id='lengthTarget';sel.setAttribute('aria-label','목표 분량');[['1500','1,500자'],['2000','2,000자'],['3000','3,000자']].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent='목표 '+t;sel.append(o)});sel.value=String(lengthTarget());
+    const bar=document.createElement('span');bar.className='length-bar';const fill=document.createElement('i');bar.append(fill);
+    const hint=document.createElement('small');hint.className='length-hint';
+    wrap.append(count,sel,bar,hint);draft.insertAdjacentElement('afterend',wrap);
+    function update(){const n=draft.value.replace(/\s/g,'').length;const t=lengthTarget();const pct=Math.max(0,Math.min(100,Math.round(n/t*100)));count.textContent=n.toLocaleString('ko-KR')+'자';fill.style.width=pct+'%';wrap.dataset.state=n>=t?'done':n>=Math.round(t*0.7)?'near':'low';hint.textContent=n>=t?'목표 분량 달성 · 이제 검수로 군더더기를 덜어내세요':'목표까지 약 '+Math.max(0,t-n).toLocaleString('ko-KR')+'자 · 소제목마다 경험 2~3문장을 더 채워보세요';}
+    sel.addEventListener('change',()=>{localStorage.setItem(LENGTH_KEY,sel.value);update()});
+    draft.addEventListener('input',update);update();
+  }
+  setupLengthMeter();
 })();
