@@ -32,6 +32,14 @@ npm start
 
 기본 주소는 `http://127.0.0.1:3000`입니다. 실제 API 키는 저장소나 브라우저에 넣지 않고 배포 서비스의 Secret 저장소에만 등록합니다.
 
+## 무료 공개판
+
+`main` 브랜치가 갱신되면 GitHub Pages에 정적 공개판을 자동 배포합니다. 공개판의 주제 정리, 말투 카드, 로컬 초안, 체크리스트와 기록은 브라우저 안에서 작동하며 서버 비밀키를 사용하지 않습니다. 네이버 로그인, DataLab 및 AI 서버 기능은 별도의 안전한 백엔드가 연결되기 전까지 제공하지 않습니다.
+
+- 공개 주소: `https://presentjinho.github.io/heunjeok-naver-blog/`
+- 호스팅 플랜: 공개 저장소의 GitHub Pages 무료 제공 범위
+- 비밀키: GitHub Pages 및 저장소에 저장하지 않음
+
 API 호출 전 `GET /api/v1/session`에서 받은 CSRF 토큰을 메모리에만 두고, 변경 요청의 `X-CSRF-Token` 헤더에 사용합니다. 세션 식별자는 자바스크립트가 읽을 수 없는 쿠키로만 전달됩니다.
 
 네이버 로그인을 사용하려면 배포 Secret 저장소에 `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`, `NAVER_REDIRECT_URI`를 등록합니다. 로그인 성공은 네이버 회원 확인이며 입력한 블로그 주소의 소유권이나 자동 발행 권한을 의미하지 않습니다.
