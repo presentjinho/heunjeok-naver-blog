@@ -12,6 +12,6 @@
   },
   "devDependencies": {
     "axe-core": "^4.12.1",
-    "jsdom": "^29.1.1"
+    "jsdom": "^30.0.0"
   }
 }
