@@ -42,6 +42,7 @@ npm start
 
 - 공개 주소: `https://presentjinho.github.io/heunjeok-naver-blog/`
 - 호스팅 플랜: 공개 저장소의 GitHub Pages 무료 제공 범위
+- 호스팅 한계: GitHub Pages에서는 클릭재킹 방지 응답 헤더를 강제할 수 없어 민감 입력·자동 발행 기능을 공개판에 두지 않습니다. 해당 기능이 필요하면 헤더 설정이 가능한 프록시/호스트로 전환하세요.
 - 로그인·API 키·서버 비용: 없음
 
 사진 취재함은 JPG·PNG·WebP 파일을 최대 10장까지 받습니다. 원본을 최대 1600px JPEG 사본으로 다시 만들어 EXIF·GPS 메타데이터를 제거하고 브라우저 IndexedDB에만 저장합니다. 사진은 서버·AI·JSON 백업 파일로 보내지지 않으며 사진 취재함의 별도 삭제 또는 전체 데이터 삭제로 지울 수 있습니다.
@@ -87,3 +88,10 @@ npm test
 GitHub·상용 제품 비교: [COMPETITIVE_RESEARCH.md](./COMPETITIVE_RESEARCH.md)  
 보류 중인 UI 세부 개선: [개선사항_체크리스트.md](./개선사항_체크리스트.md)
 보안 경계와 서버 추가 조건: [SECURITY.md](./SECURITY.md)
+
+## 라이선스와 권리
+
+- 앱 소스: [MIT License](./LICENSE)
+- 개발 의존성과 상표 고지: [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
+- 입력한 글·사진의 권리는 사용자와 원 권리자에게 있습니다. 타인의 글·사진을 사용할 권한은 이 도구가 부여하지 않습니다.
+- 화면의 문구 점검과 초안 보조는 법률·광고 심의·검색 노출 판단을 대신하지 않습니다.
