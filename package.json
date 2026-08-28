@@ -11,7 +11,7 @@
     "ci": "npm run check && npm test && npm run security:scan"
   },
   "devDependencies": {
-    "axe-core": "^4.12.1",
+    "axe-core": "^4.13.0",
     "jsdom": "^29.1.1"
   }
 }
